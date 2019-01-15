@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScryptTheCrypt", "ScryptTheCrypt\ScryptTheCrypt.csproj", "{8C37243B-9B5A-4AAF-9237-A26B75B1377C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "..\UnitTest\UnitTest.csproj", "{C53EB87F-9FBC-4789-BC05-84A887A0ABF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{8C37243B-9B5A-4AAF-9237-A26B75B1377C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C37243B-9B5A-4AAF-9237-A26B75B1377C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C37243B-9B5A-4AAF-9237-A26B75B1377C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C53EB87F-9FBC-4789-BC05-84A887A0ABF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C53EB87F-9FBC-4789-BC05-84A887A0ABF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C53EB87F-9FBC-4789-BC05-84A887A0ABF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C53EB87F-9FBC-4789-BC05-84A887A0ABF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
