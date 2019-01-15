@@ -5,12 +5,9 @@ namespace ScryptTheCrypt
 {
     public sealed class GameField
     {
-        private List<GameActor> players = new List<GameActor>();
-        private List<GameActor> mobs = new List<GameActor>();
+        private readonly List<GameActor> players = new List<GameActor>();
+        private readonly List<GameActor> mobs = new List<GameActor>();
 
-        public GameField()
-        {
-        }
         public void addPlayer(GameActor a)
         {
             players.Add(a);
