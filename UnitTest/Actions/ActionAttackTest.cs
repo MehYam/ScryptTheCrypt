@@ -1,15 +1,15 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTest
+namespace UnitTest.Actions
 {
     [TestClass]
-    public class GameFieldTest
+    public class ActionAttackTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void TestActionAttack()
         {
-            Assert.Fail("not testing GameField yet");
+            Assert.Fail("no tests yet");
         }
     }
 }

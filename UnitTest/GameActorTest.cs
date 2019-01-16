@@ -10,83 +10,83 @@ namespace UnitTest
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void constructor_with_zero_health_should_throwArgumentOutOfRange()
+        public void ConstructorWithZeroHealthShouldThrow()
         {
             var actorNotOk = new GameActor(0);
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void constructor_with_negative_health_should_throwArgumentOutOfRange()
+        public void ConstructorWithNegativeHealthShouldThrow()
         {
             var actorNotOk = new GameActor(-1);
         }
         [TestMethod]
-        public void big_damage_should_zero_health()
+        public void BigDamageShouldZeroHealth()
         {
             var actor = new GameActor(100);
-            actor.takeDamage(1000);
-            Assert.AreEqual(actor.health, 0);
+            actor.TakeDamage(1000);
+            Assert.AreEqual(actor.Health, 0);
         }
         [TestMethod]
-        public void big_heal_should_maximize_health()
+        public void BigHealShouldMaxHealth()
         {
             var actor = new GameActor(100);
-            actor.takeDamage(50);
-            actor.heal(1000);
-            Assert.AreEqual(actor.health, actor.baseHealth);
+            actor.TakeDamage(50);
+            actor.Heal(1000);
+            Assert.AreEqual(actor.Health, actor.baseHealth);
         }
         [TestMethod]
-        public void actor_should_survive_damage()
+        public void ActorCanSurviveDamage()
         {
             var actor = new GameActor(100);
-            actor.takeDamage(30);
+            actor.TakeDamage(30);
 
-            Assert.AreEqual(actor.health, 70);
-            Assert.IsTrue(actor.alive);
+            Assert.AreEqual(actor.Health, 70);
+            Assert.IsTrue(actor.Alive);
         }
         [TestMethod]
-        public void actor_should_die_from_damage()
+        public void ActorCanDieFromDamage()
         {
             var actor = new GameActor(100);
-            actor.takeDamage(200);
+            actor.TakeDamage(200);
 
-            Assert.IsFalse(actor.alive);
+            Assert.IsFalse(actor.Alive);
         }
         [TestMethod]
-        public void actor_with_no_weapon_should_do_no_damage()
+        public void WeaponlessActorDoesNoDamage()
         {
-            var a = new GameActor(100);
-            var b = new GameActor(100);
+            var a = new GameActor();
+            var b = new GameActor();
 
-            a.dealDamage(b);
+            a.DealDamage(b);
 
-            Assert.AreEqual(b.baseHealth, b.health);
-            Assert.IsTrue(b.alive);
+            Assert.AreEqual(b.baseHealth, b.Health);
+            Assert.IsTrue(b.Alive);
         }
         [TestMethod]
-        public void actor_with_weapon_should_deal_damage()
+        public void WeaponfulActorDoesDamage()
         {
-            var a = new GameActor(100);
-            var b = new GameActor(100);
+            var a = new GameActor();
+            var b = new GameActor();
 
-            a.weapon = new GameWeapon("lunchbox", 50);
+            a.Weapon = new GameWeapon("lunchbox", b.baseHealth - 1);
 
-            a.dealDamage(b);
-            Assert.AreEqual(b.health, b.baseHealth - a.weapon.damage);
-            Assert.IsTrue(a.alive);
-            Assert.IsTrue(b.alive);
+            a.DealDamage(b);
+            Assert.AreEqual(b.Health, b.baseHealth - a.Weapon.damage);
+            Assert.IsTrue(a.Alive);
+            Assert.IsTrue(b.Alive);
         }
         [TestMethod]
-        public void actor_with_weapon_should_kill()
+        public void WeaponfulActorCanKill()
         {
-            var a = new GameActor(100);
-            var b = new GameActor(100);
+            var a = new GameActor();
+            var b = new GameActor();
 
-            a.weapon = new GameWeapon("deadly apple", 150);
+            a.Weapon = new GameWeapon("deadly apple", b.baseHealth + 1);
 
-            a.dealDamage(b);
-            Assert.AreEqual(b.health, 0);
-            Assert.IsFalse(b.alive);
+            a.DealDamage(b);
+            Assert.AreEqual(b.Health, 0);
+            Assert.IsFalse(b.Alive);
         }
     }
 }
