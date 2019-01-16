@@ -8,13 +8,14 @@ namespace ScryptTheCrypt
 {
     public sealed class Game
     {
-        //KAI: what's the difference between Game and GameField...
+        public enum ActorAlignment { Player, Mob };
+
         public readonly List<GameActor> players = new List<GameActor>();
         public readonly List<GameActor> mobs = new List<GameActor>();
 
         public readonly RNG rng;
 
-        public Game(int seed)
+        public Game(int seed = 0)
         {
             rng = new RNG(seed);
         }

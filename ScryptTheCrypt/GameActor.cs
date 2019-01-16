@@ -14,7 +14,7 @@ namespace ScryptTheCrypt
         {
             if (baseHealth <= 0)
             {
-                throw new ArgumentOutOfRangeException("baseHealth", "baseHealth must be greater than zero");
+                throw new ArgumentOutOfRangeException(nameof(baseHealth), "baseHealth must be greater than zero");
             }
             this.baseHealth = baseHealth;
             this.Health = baseHealth;
@@ -29,7 +29,7 @@ namespace ScryptTheCrypt
         }
         public void DealDamage(GameActor other)
         {
-            if (other == null) throw new ArgumentNullException("other", "other actor is null");
+            if (other == null) throw new ArgumentNullException(nameof(other), "other actor is null");
             if (Weapon != null)
             {
                 other.TakeDamage(Weapon.damage);
@@ -62,7 +62,8 @@ namespace ScryptTheCrypt
         }
         public object GetAttribute(Attribute a)
         {
-            return attributes[a];
+            attributes.TryGetValue(a, out object retval);
+            return retval;
         }
         public void ClearAttribute(Attribute a)
         {

@@ -12,13 +12,15 @@ namespace ScryptTheCrypt.Actions
             {
                 throw new ArgumentNullException(nameof(g));
             }
-
             if (actor == null)
             {
                 throw new ArgumentNullException(nameof(actor));
             }
-
-            throw new NotImplementedException();
+            var target = actor.GetAttribute(GameActor.Attribute.Target);
+            if (target is GameActor)
+            {
+                actor.DealDamage((GameActor)target);
+            }
         }
     }
 }

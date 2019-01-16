@@ -1,5 +1,7 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using ScryptTheCrypt;
+using ScryptTheCrypt.Actions;
 
 namespace UnitTest.Actions
 {
@@ -7,9 +9,16 @@ namespace UnitTest.Actions
     public class ActionAttackTest
     {
         [TestMethod]
-        public void TestActionAttack()
+        public void TestAttack()
         {
-            Assert.Fail("no tests yet");
+            var testGame = new TestGameWithActors(2112);
+            testGame.player.SetAttribute(GameActor.Attribute.Target, testGame.mob);
+            testGame.player.AddAction(new ActionAttack());
+            testGame.player.Weapon = new GameWeapon("fist of testing rage", 20);
+
+            testGame.game.DoTurn();
+
+            Assert.AreEqual(testGame.mob.Health, testGame.mob.baseHealth - testGame.player.Weapon.damage);
         }
     }
 }

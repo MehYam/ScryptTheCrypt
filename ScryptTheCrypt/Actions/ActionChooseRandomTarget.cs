@@ -6,10 +6,10 @@ namespace ScryptTheCrypt.Actions
 {
     public sealed class ActionChooseRandomTarget : IActorAction
     {
-        readonly bool friendly;
-        public ActionChooseRandomTarget(bool friendly = false)
+        readonly Game.ActorAlignment targetAlignment;
+        public ActionChooseRandomTarget(Game.ActorAlignment targetAlignment)
         {
-            this.friendly = friendly;
+            this.targetAlignment = targetAlignment;
         }
         public void act(Game g, GameActor actor)
         {
@@ -21,16 +21,15 @@ namespace ScryptTheCrypt.Actions
             {
                 throw new ArgumentNullException(nameof(actor));
             }
-
-            // figure out if we're a player or mob
-            bool bPlayer = g.players.Contains(actor);
-            if (!bPlayer && !g.mobs.Contains(actor))
+            switch(targetAlignment)
             {
-                throw new ArgumentException("actor doesn't belong to game");
+                case Game.ActorAlignment.Mob:
+                    actor.SetAttribute(GameActor.Attribute.Target, g.mobs[g.rng.Next(0, g.mobs.Count - 1)]);
+                    break;
+                case Game.ActorAlignment.Player:
+                    actor.SetAttribute(GameActor.Attribute.Target, g.players[g.rng.Next(0, g.players.Count - 1)]);
+                    break;
             }
-
-
         }
-        public GameActor Choice { get; private set; }
     }
 }

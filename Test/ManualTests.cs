@@ -7,9 +7,17 @@ using System.Threading.Tasks;
 using ScryptTheCrypt.Utils;
 namespace Test
 {
-    class Test
+    class ManualTests
     {
         static void Main(string[] args)
+        {
+            RunSampleGame();
+        }
+        static void RunSampleGame()
+        {
+
+        }
+        static void RNG()
         {
             var rng = new RNG(2112);
 
