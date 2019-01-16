@@ -12,25 +12,25 @@ namespace UnitTest
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void ConstructorWithZeroHealthShouldThrow()
         {
-            var actorNotOk = new GameActor(0);
+            var actorNotOk = new GameActor("zombie", 0);
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void ConstructorWithNegativeHealthShouldThrow()
         {
-            var actorNotOk = new GameActor(-1);
+            var actorNotOk = new GameActor("vampire", -1);
         }
         [TestMethod]
         public void BigDamageShouldZeroHealth()
         {
-            var actor = new GameActor(100);
+            var actor = new GameActor("doomed", 100);
             actor.TakeDamage(1000);
             Assert.AreEqual(actor.Health, 0);
         }
         [TestMethod]
         public void BigHealShouldMaxHealth()
         {
-            var actor = new GameActor(100);
+            var actor = new GameActor("lucky", 100);
             actor.TakeDamage(50);
             actor.Heal(1000);
             Assert.AreEqual(actor.Health, actor.baseHealth);
@@ -38,7 +38,7 @@ namespace UnitTest
         [TestMethod]
         public void ActorCanSurviveDamage()
         {
-            var actor = new GameActor(100);
+            var actor = new GameActor("hurt", 100);
             actor.TakeDamage(30);
 
             Assert.AreEqual(actor.Health, 70);
@@ -47,7 +47,7 @@ namespace UnitTest
         [TestMethod]
         public void ActorCanDieFromDamage()
         {
-            var actor = new GameActor(100);
+            var actor = new GameActor("why me", 100);
             actor.TakeDamage(200);
 
             Assert.IsFalse(actor.Alive);

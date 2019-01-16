@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
+using ScryptTheCrypt;
 using ScryptTheCrypt.Utils;
 namespace Test
 {
@@ -15,7 +12,7 @@ namespace Test
         }
         static void RunSampleGame()
         {
-
+            var game = new Game(2112);
         }
         static void RNG()
         {

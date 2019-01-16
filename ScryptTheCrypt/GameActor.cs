@@ -6,18 +6,20 @@ namespace ScryptTheCrypt
 {
     public sealed class GameActor
     {
+        public readonly string name;
         public readonly float baseHealth;
         public float Health { get; private set; }
         public GameWeapon Weapon { get; set; }
         public bool Alive { get { return Health > 0; } }
-        public GameActor(float baseHealth = 100)
+        public GameActor(string name = "anon", float baseHealth = 100)
         {
             if (baseHealth <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(baseHealth), "baseHealth must be greater than zero");
             }
+            this.name = name;
             this.baseHealth = baseHealth;
-            this.Health = baseHealth;
+            Health = baseHealth;
         }
         public void TakeDamage(float d)
         {

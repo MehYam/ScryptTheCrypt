@@ -25,10 +25,10 @@ namespace UnitTest
     class TestGameWithActors
     {
         public Game game;
-        public GameActor player = new GameActor();
-        public GameActor player2 = new GameActor();
-        public GameActor mob = new GameActor();
-        public GameActor mob2 = new GameActor();
+        public GameActor player = new GameActor("alice");
+        public GameActor player2 = new GameActor("bob");
+        public GameActor mob = new GameActor("carly");
+        public GameActor mob2 = new GameActor("denise");
         public MockAction playerMockAction = new MockAction();
         public MockAction mobMockAction = new MockAction();
         public TestGameWithActors(int seed = 2112)
