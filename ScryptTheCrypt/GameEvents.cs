@@ -30,10 +30,13 @@ namespace ScryptTheCrypt
         public event Action<Game> TurnEnd = delegate { };
         public event Action<Game, GameActor, GameActor> AttackStart = delegate { };
         public event Action<Game, GameActor, GameActor> AttackEnd = delegate { };
+        public event Action<Game, GameActor> Death = delegate { };
 
+        //KAI: it may be wrong/unnecessary to be passing back the Game instance everywhere, but it is convenient
         public void TurnStart_Fire(Game g) { TurnStart(g); }
         public void TurnEnd_Fire(Game g) { TurnEnd(g); }
         public void AttackStart_Fire(Game g, GameActor attacker, GameActor victim) { AttackStart(g, attacker, victim); }
         public void AttackEnd_Fire(Game g, GameActor attacker, GameActor victim) { AttackEnd(g, attacker, victim); }
+        public void Death_Fire(Game g, GameActor a) { Death(g, a); }
     }
 }

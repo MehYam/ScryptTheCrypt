@@ -43,5 +43,14 @@ namespace UnitTest
             game.mobs.Add(mob);
             game.mobs.Add(mob2);
         }
+        public void ArmPlayer(float damage = 20)
+        {
+            player.Weapon = new GameWeapon("fist of testing rage", damage);
+        }
+        public void PreparePlayerToAttack()
+        {
+            player.SetAttribute(GameActor.Attribute.Target, mob);
+            player.AddAction(new ActionAttack());
+        }
     }
 }

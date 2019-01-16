@@ -48,5 +48,57 @@ namespace UnitTest
             Assert.AreEqual(testGame.playerMockAction.timesCalled, 1);
             Assert.AreEqual(testGame.mobMockAction.timesCalled, 1);
         }
+        [TestMethod]
+        public void DoTurnShouldFireTurnEvents()
+        {
+            bool startFired = false;
+            bool endFired = false;
+            GameEvents.Instance.TurnStart += g => { startFired = true; };
+            GameEvents.Instance.TurnEnd += g => { endFired = true; };
+            testGame.game.DoTurn();
+            GameEvents.ReleaseAllListeners();
+
+            Assert.IsTrue(startFired);
+            Assert.IsTrue(endFired);
+        }
+        [TestMethod]
+        public void DoTurnShouldFireAttackEvents()
+        {
+            bool startFired = false;
+            bool endFired = false;
+            GameEvents.Instance.AttackStart += (g, a, b) => 
+            {
+                Assert.AreEqual(a, testGame.player);
+                Assert.AreEqual(b, testGame.mob);
+                startFired = true;
+            };
+            GameEvents.Instance.AttackEnd += (g, a, b) => 
+            {
+                Assert.AreEqual(a, testGame.player);
+                Assert.AreEqual(b, testGame.mob);
+                endFired = true;
+            };
+            testGame.ArmPlayer();
+            testGame.PreparePlayerToAttack();
+            testGame.game.DoTurn();
+            GameEvents.ReleaseAllListeners();
+
+            Assert.IsTrue(startFired);
+            Assert.IsTrue(endFired);
+        }
+        [TestMethod]
+        public void DoTurnShouldFireDeathEvents()
+        {
+            bool fired = false;
+            GameEvents.Instance.Death += (g, a) => 
+            {
+                fired = true;
+                Assert.AreEqual(a, testGame.mob);
+            };
+            testGame.ArmPlayer(testGame.mob.baseHealth);
+            testGame.PreparePlayerToAttack();
+            Assert.IsTrue(fired);
+            Assert.IsFalse(testGame.mob.Alive);
+        }
     }
 }

@@ -8,17 +8,34 @@ namespace UnitTest.Actions
     [TestClass]
     public class ActionAttackTest
     {
+        //KAI: many of these are really integration tests
         [TestMethod]
-        public void TestAttack()
+        public void AttackShouldInflictWeaponDamage()
         {
             var testGame = new TestGameWithActors(2112);
-            testGame.player.SetAttribute(GameActor.Attribute.Target, testGame.mob);
-            testGame.player.AddAction(new ActionAttack());
-            testGame.player.Weapon = new GameWeapon("fist of testing rage", 20);
-
+            testGame.ArmPlayer();
+            testGame.PreparePlayerToAttack();
             testGame.game.DoTurn();
 
             Assert.AreEqual(testGame.mob.Health, testGame.mob.baseHealth - testGame.player.Weapon.damage);
+        }
+        [TestMethod]
+        public void WeaponlessAttackShouldDoNothing()
+        {
+            var testGame = new TestGameWithActors(2112);
+            testGame.PreparePlayerToAttack();
+            testGame.game.DoTurn();
+
+            Assert.AreEqual(testGame.mob.Health, testGame.mob.baseHealth);
+        }
+        [TestMethod]
+        public void UnpreparedAttackEvenWithWeaponShouldDoNothing()
+        {
+            var testGame = new TestGameWithActors(2112);
+            testGame.ArmPlayer();
+            testGame.game.DoTurn();
+
+            Assert.AreEqual(testGame.mob.Health, testGame.mob.baseHealth);
         }
     }
 }

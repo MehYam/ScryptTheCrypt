@@ -21,6 +21,8 @@ namespace ScryptTheCrypt
         }
         public void DoTurn()
         {
+            GameEvents.Instance.TurnStart_Fire(this);
+
             // loop the actors, having them do their actions
             foreach (var actor in players)
             {
@@ -30,6 +32,8 @@ namespace ScryptTheCrypt
             {
                 actor.DoActions(this);
             }
+
+            GameEvents.Instance.TurnEnd_Fire(this);
         }
     }
 }

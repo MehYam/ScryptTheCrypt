@@ -82,7 +82,7 @@ namespace UnitTest
             var a = new GameActor();
             var b = new GameActor();
 
-            a.Weapon = new GameWeapon("deadly apple", b.baseHealth + 1);
+            a.Weapon = new GameWeapon("deadly apple", b.baseHealth);
 
             a.DealDamage(b);
             Assert.AreEqual(b.Health, 0);

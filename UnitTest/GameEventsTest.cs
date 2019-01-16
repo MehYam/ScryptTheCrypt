@@ -11,19 +11,17 @@ namespace UnitTest
         public void EventShouldFireOnlyWhenSubscribed()
         {
             int timesFired = 0;
-            Game gameFired = null;
+            var game = new Game();
             void handler(Game g)
             {
                 ++timesFired;
-                gameFired = g;
+                Assert.AreEqual(game, g);
             }
 
-            var game = new Game();
             GameEvents.Instance.TurnStart += handler;
             GameEvents.Instance.TurnStart_Fire(game);
 
             Assert.AreEqual(timesFired, 1);
-            Assert.AreEqual(gameFired, game);
 
             GameEvents.Instance.TurnStart -= handler;
             GameEvents.Instance.TurnStart_Fire(game);
