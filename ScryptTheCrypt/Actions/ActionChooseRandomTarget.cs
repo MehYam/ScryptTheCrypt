@@ -22,8 +22,14 @@ namespace ScryptTheCrypt.Actions
                 throw new ArgumentNullException(nameof(actor));
             }
 
-            // figure out if we're a friendly or mob
-            //KAI: left off here!
+            // figure out if we're a player or mob
+            bool bPlayer = g.players.Contains(actor);
+            if (!bPlayer && !g.mobs.Contains(actor))
+            {
+                throw new ArgumentException("actor doesn't belong to game");
+            }
+
+
         }
         public GameActor Choice { get; private set; }
     }

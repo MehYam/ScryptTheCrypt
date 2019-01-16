@@ -28,5 +28,12 @@ namespace UnitTest.Actions
 
             Assert.Fail();
         }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void CallingActWithIncorrectActorOrGameShouldThrow()
+        {
+            var testGame = new TestGameWithActors();
+            Assert.Fail();
+        }
     }
 }

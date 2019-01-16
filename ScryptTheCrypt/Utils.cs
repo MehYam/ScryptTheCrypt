@@ -8,7 +8,7 @@ namespace ScryptTheCrypt.Utils
     // Adapted from http://rosettacode.org/wiki/Subtractive_generator#C.23
     public class RNG
     {
-        public const int MAX = 1000000000;
+        public const int MAX = System.Int32.MaxValue >> 1;
         private readonly int[] state;
         private int pos;
 
@@ -39,6 +39,16 @@ namespace ScryptTheCrypt.Utils
             pos = (pos + 1) % 55;
             state[pos] = temp;
             return temp;
+        }
+        public double NextDouble()
+        {
+            return (double)Next() / (double) MAX;
+        }
+        public int Next(int min, int max)
+        {
+            double r = NextDouble();
+
+            return min + (int)Math.Round(r * (double)(max - min));
         }
     }
 }

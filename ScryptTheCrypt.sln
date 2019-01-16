@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScryptTheCrypt", "ScryptThe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{2E614593-44FE-46E6-9575-FDFAC0D82317}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{FFECD0A1-E807-4A5E-87DD-43805369AEF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2E614593-44FE-46E6-9575-FDFAC0D82317}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E614593-44FE-46E6-9575-FDFAC0D82317}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E614593-44FE-46E6-9575-FDFAC0D82317}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFECD0A1-E807-4A5E-87DD-43805369AEF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFECD0A1-E807-4A5E-87DD-43805369AEF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFECD0A1-E807-4A5E-87DD-43805369AEF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFECD0A1-E807-4A5E-87DD-43805369AEF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
