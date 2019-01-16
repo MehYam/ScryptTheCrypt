@@ -97,6 +97,7 @@ namespace UnitTest
             };
             testGame.ArmPlayer(testGame.mob.baseHealth);
             testGame.PreparePlayerToAttack();
+            testGame.game.DoTurn();
             Assert.IsTrue(fired);
             Assert.IsFalse(testGame.mob.Alive);
         }
