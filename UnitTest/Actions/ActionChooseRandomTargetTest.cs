@@ -49,5 +49,22 @@ namespace UnitTest.Actions
             var action = new ActionChooseRandomTarget(Game.ActorAlignment.Player);
             action.act(new Game(), null);
         }
+        [TestMethod]
+        public void DeadActorsShouldNotBeTargeted()
+        {
+            var game = new Game();
+            var deadHorse = new GameActor();
+            deadHorse.TakeDamage(deadHorse.Health);
+
+            game.mobs.Add(deadHorse);
+
+            var action = new ActionChooseRandomTarget(Game.ActorAlignment.Mob);
+            var actor = new GameActor();
+
+            game.players.Add(actor);
+            action.act(game, actor);
+
+            Assert.IsNull(actor.GetAttribute(GameActor.Attribute.Target));
+        }
     }
 }
