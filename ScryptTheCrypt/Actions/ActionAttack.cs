@@ -16,8 +16,7 @@ namespace ScryptTheCrypt.Actions
             {
                 throw new ArgumentNullException(nameof(actor));
             }
-            var target = actor.GetAttribute(GameActor.Attribute.Target) as GameActor;
-            if (target != null)
+            if (actor.GetAttribute(GameActor.Attribute.Target) is GameActor target)
             {
                 bool wasAlive = target.Alive;
 

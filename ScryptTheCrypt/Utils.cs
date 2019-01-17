@@ -9,6 +9,7 @@ namespace ScryptTheCrypt.Utils
     public class RNG
     {
         public const int MAX = System.Int32.MaxValue >> 1;
+        public readonly int seed;
         private readonly int[] state;
         private int pos;
 
@@ -18,6 +19,8 @@ namespace ScryptTheCrypt.Utils
         }
         public RNG(int seed)
         {
+            this.seed = seed;
+
             state = new int[55];
 
             int[] temp = new int[55];

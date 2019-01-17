@@ -27,6 +27,15 @@ namespace UnitTest
             testGame = null;
         }
         [TestMethod]
+        public void DeadActorsShouldGetNoTurn()
+        {
+            testGame.player.TakeDamage(testGame.player.Health);
+            testGame.game.DoTurn();
+
+            Assert.AreEqual(testGame.playerMockAction.timesCalled, 0);
+            Assert.AreEqual(testGame.mobMockAction.timesCalled, 1);
+        }
+        [TestMethod]
         public void DoTurnShouldCallActionWithCorrectGame()
         {
             testGame.game.DoTurn();
@@ -61,6 +70,7 @@ namespace UnitTest
             Assert.IsTrue(startFired);
             Assert.IsTrue(endFired);
         }
+        // KAI: some of these are integration tests, and belong elsewhere.
         [TestMethod]
         public void DoTurnShouldFireAttackEvents()
         {
@@ -79,7 +89,7 @@ namespace UnitTest
                 endFired = true;
             };
             testGame.ArmPlayer();
-            testGame.PreparePlayerToAttack();
+            testGame.AddTargetAndAttackToPlayer();
             testGame.game.DoTurn();
             GameEvents.ReleaseAllListeners();
 
@@ -96,10 +106,22 @@ namespace UnitTest
                 Assert.AreEqual(a, testGame.mob);
             };
             testGame.ArmPlayer(testGame.mob.baseHealth);
-            testGame.PreparePlayerToAttack();
+            testGame.AddTargetAndAttackToPlayer();
             testGame.game.DoTurn();
             Assert.IsTrue(fired);
             Assert.IsFalse(testGame.mob.Alive);
+        }
+        [TestMethod]
+        public void DoTurnShouldFireTargetEvents()
+        {
+            bool fired = false;
+            GameEvents.Instance.TargetChosen += (g, a) => 
+            {
+                fired = true;
+            };
+            testGame.AddChooseTargetToPlayer();
+            testGame.game.DoTurn();
+            Assert.IsTrue(fired);
         }
     }
 }

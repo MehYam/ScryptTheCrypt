@@ -25,9 +25,11 @@ namespace ScryptTheCrypt.Actions
             {
                 case Game.ActorAlignment.Mob:
                     actor.SetAttribute(GameActor.Attribute.Target, g.mobs[g.rng.Next(0, g.mobs.Count - 1)]);
+                    GameEvents.Instance.TargetChosen_Fire(g, actor);
                     break;
                 case Game.ActorAlignment.Player:
                     actor.SetAttribute(GameActor.Attribute.Target, g.players[g.rng.Next(0, g.players.Count - 1)]);
+                    GameEvents.Instance.TargetChosen_Fire(g, actor);
                     break;
             }
         }

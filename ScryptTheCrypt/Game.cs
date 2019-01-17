@@ -19,6 +19,22 @@ namespace ScryptTheCrypt
         {
             rng = new RNG(seed);
         }
+        public override string ToString()
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.AppendFormat("seed {0}\n", rng.seed);
+            sb.AppendLine("players:");
+            foreach (var player in players)
+            {
+                sb.AppendLine(player.ToString());
+            }
+            sb.AppendLine("mobs:");
+            foreach (var mobs in mobs)
+            {
+                sb.AppendLine(mobs.ToString());
+            }
+            return sb.ToString();
+        }
         public void DoTurn()
         {
             GameEvents.Instance.TurnStart_Fire(this);
@@ -26,11 +42,17 @@ namespace ScryptTheCrypt
             // loop the actors, having them do their actions
             foreach (var actor in players)
             {
-                actor.DoActions(this);
+                if (actor.Alive)
+                {
+                    actor.DoActions(this);
+                }
             }
             foreach (var actor in mobs)
             {
-                actor.DoActions(this);
+                if (actor.Alive)
+                {
+                    actor.DoActions(this);
+                }
             }
 
             GameEvents.Instance.TurnEnd_Fire(this);

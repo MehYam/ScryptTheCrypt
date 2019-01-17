@@ -47,7 +47,11 @@ namespace UnitTest
         {
             player.Weapon = new GameWeapon("fist of testing rage", damage);
         }
-        public void PreparePlayerToAttack()
+        public void AddChooseTargetToPlayer()
+        {
+            player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
+        }
+        public void AddTargetAndAttackToPlayer()
         {
             player.SetAttribute(GameActor.Attribute.Target, mob);
             player.AddAction(new ActionAttack());

@@ -14,7 +14,7 @@ namespace UnitTest.Actions
         {
             var testGame = new TestGameWithActors(2112);
             testGame.ArmPlayer();
-            testGame.PreparePlayerToAttack();
+            testGame.AddTargetAndAttackToPlayer();
             testGame.game.DoTurn();
 
             Assert.AreEqual(testGame.mob.Health, testGame.mob.baseHealth - testGame.player.Weapon.damage);
@@ -23,7 +23,7 @@ namespace UnitTest.Actions
         public void WeaponlessAttackShouldDoNothing()
         {
             var testGame = new TestGameWithActors(2112);
-            testGame.PreparePlayerToAttack();
+            testGame.AddTargetAndAttackToPlayer();
             testGame.game.DoTurn();
 
             Assert.AreEqual(testGame.mob.Health, testGame.mob.baseHealth);
