@@ -59,12 +59,12 @@ namespace UnitTest.Actions
             game.mobs.Add(deadHorse);
 
             var action = new ActionChooseRandomTarget(Game.ActorAlignment.Mob);
-            var actor = new GameActor();
+            var chooser = new GameActor();
 
-            game.players.Add(actor);
-            action.act(game, actor);
+            game.players.Add(chooser);
+            action.act(game, chooser);
 
-            Assert.IsNull(actor.GetAttribute(GameActor.Attribute.Target));
+            Assert.IsNull(chooser.GetAttribute(GameActor.Attribute.Target));
         }
     }
 }

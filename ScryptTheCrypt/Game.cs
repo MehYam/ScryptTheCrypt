@@ -23,16 +23,18 @@ namespace ScryptTheCrypt
         public override string ToString()
         {
             var sb = new System.Text.StringBuilder();
-            sb.AppendFormat("seed {0}\n", rng.seed);
-            sb.AppendLine("players:");
+            sb.AppendFormat("seed {0}", rng.seed);
+            sb.Append("--players--");
             foreach (var player in players)
             {
-                sb.AppendLine(player.ToString());
+                sb.AppendLine();
+                sb.Append(player.ToString());
             }
-            sb.AppendLine("mobs:");
+            sb.Append("\n--mobs--");
             foreach (var mobs in mobs)
             {
-                sb.AppendLine(mobs.ToString());
+                sb.AppendLine();
+                sb.Append(mobs.ToString());
             }
             return sb.ToString();
         }
