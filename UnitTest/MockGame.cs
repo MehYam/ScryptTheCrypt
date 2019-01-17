@@ -56,5 +56,15 @@ namespace UnitTest
             player.SetAttribute(GameActor.Attribute.Target, mob);
             player.AddAction(new ActionAttack());
         }
+        public void KillPlayers()
+        {
+            player.TakeDamage(player.Health);
+            player2.TakeDamage(player2.Health);
+        }
+        public void KillMobs()
+        {
+            mob.TakeDamage(mob.Health);
+            mob2.TakeDamage(mob2.Health);
+        }
     }
 }

@@ -27,6 +27,33 @@ namespace UnitTest
             testGame = null;
         }
         [TestMethod]
+        public void DeadMobsShouldReturnVictory()
+        {
+            testGame.KillMobs();
+
+            Assert.AreEqual(testGame.game.GameProgress, Game.Progress.PlayersWin);
+        }
+        [TestMethod]
+        public void DeadPlayersShouldReturnLoss()
+        {
+            testGame.KillPlayers();
+
+            Assert.AreEqual(testGame.game.GameProgress, Game.Progress.MobsWin);
+        }
+        [TestMethod]
+        public void AllDeadShouldReturnDraw()
+        {
+            testGame.KillPlayers();
+            testGame.KillMobs();
+
+            Assert.AreEqual(testGame.game.GameProgress, Game.Progress.Draw);
+        }
+        [TestMethod]
+        public void SurvivingPlayerAndMobShouldReturnGameInProgress()
+        {
+            Assert.AreEqual(testGame.game.GameProgress, Game.Progress.InProgress);
+        }
+        [TestMethod]
         public void DeadActorsShouldGetNoTurn()
         {
             testGame.player.TakeDamage(testGame.player.Health);

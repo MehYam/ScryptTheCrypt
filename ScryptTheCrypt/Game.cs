@@ -9,6 +9,7 @@ namespace ScryptTheCrypt
     public sealed class Game
     {
         public enum ActorAlignment { Player, Mob };
+        public enum Progress { InProgress, PlayersWin, MobsWin, Draw };
 
         public readonly List<GameActor> players = new List<GameActor>();
         public readonly List<GameActor> mobs = new List<GameActor>();
@@ -56,6 +57,27 @@ namespace ScryptTheCrypt
             }
 
             GameEvents.Instance.TurnEnd_Fire(this);
+        }
+        public Progress GameProgress {
+            get
+            {
+                bool playersAlive = players.Exists(player => player.Alive);
+                bool mobsAlive = mobs.Exists(mob => mob.Alive);
+
+                if (!playersAlive && !mobsAlive)
+                {
+                    return Progress.Draw;
+                }
+                if (!playersAlive)
+                {
+                    return Progress.MobsWin;
+                }
+                if (!mobsAlive)
+                {
+                    return Progress.PlayersWin;
+                }
+                return Progress.InProgress;
+            }
         }
     }
 }
