@@ -66,5 +66,18 @@ namespace UnitTest.Actions
 
             Assert.IsNull(chooser.GetAttribute(GameActor.Attribute.Target));
         }
+        [TestMethod]
+        public void NullTargetShouldNotFireEvent()
+        {
+            var game = new Game();
+            var action = new ActionChooseRandomTarget(Game.ActorAlignment.Player);
+            var actor = new GameActor();
+
+            GameEvents.Instance.TargetChosen += (g, a) =>
+            {
+                Assert.Fail("target should not be fired as chosen if null");
+            };
+            action.act(game, actor);
+        }
     }
 }

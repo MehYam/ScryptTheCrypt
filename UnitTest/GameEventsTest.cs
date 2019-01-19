@@ -44,10 +44,5 @@ namespace UnitTest
 
             Assert.AreEqual(timesFired, 1);
         }
-        [TestMethod]
-        public void EndOfGameShouldFireEvent()
-        {
-
-        }
     }
 }

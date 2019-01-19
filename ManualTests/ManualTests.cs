@@ -65,6 +65,7 @@ namespace ManualTests
             }
 
             Console.WriteLine("Game ended with {0}", game.GameProgress);
+            GameEvents.ReleaseAllListeners();
         }
         static void RNG()
         {
