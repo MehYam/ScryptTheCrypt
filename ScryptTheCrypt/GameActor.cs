@@ -84,10 +84,12 @@ namespace ScryptTheCrypt
         }
         public void DoActions(Game g)
         {
+            GameEvents.Instance.ActorActionsStart_Fire(g, this);
             foreach(var action in actions)
             {
                 action.act(g, this);
             }
+            GameEvents.Instance.ActorActionsEnd_Fire(g, this);
         }
     }
 }

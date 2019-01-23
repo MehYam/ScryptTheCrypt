@@ -88,5 +88,28 @@ namespace UnitTest
             Assert.AreEqual(b.Health, 0);
             Assert.IsFalse(b.Alive);
         }
+        [TestMethod]
+        public void DoActionsShouldFireActorActionsEvents()
+        {
+            GameActor currentActor = null;
+            GameActor testActor = new GameActor();
+
+            GameEvents.Instance.ActorActionsStart += (g, a) => 
+            {
+                Assert.IsNull(currentActor);
+                currentActor = a;
+
+                Assert.AreEqual(testActor, a);
+            };
+            GameEvents.Instance.ActorActionsEnd += (g, a) => 
+            {
+                Assert.AreEqual(currentActor, a);
+                Assert.AreEqual(testActor, a);
+            };
+            testActor.DoActions(null);
+
+            Assert.AreEqual(currentActor, testActor);
+            GameEvents.ReleaseAllListeners();
+        }
     }
 }

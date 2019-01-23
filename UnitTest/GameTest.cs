@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using ScryptTheCrypt;
@@ -96,6 +97,31 @@ namespace UnitTest
 
             Assert.IsTrue(startFired);
             Assert.IsTrue(endFired);
+        }
+        [TestMethod]
+        public void DoTurnShouldFireActorActionsEvents()
+        {
+            bool fired = false;
+            GameActor currentActor = null;
+            GameEvents.Instance.ActorActionsStart += (g, a) => 
+            {
+                fired = true;
+                Assert.AreEqual(g, testGame.game);
+                Assert.IsNull(currentActor);
+                currentActor = a;
+            };
+            GameEvents.Instance.ActorActionsEnd += (g, a) => 
+            {
+                Assert.AreEqual(g, testGame.game);
+                Assert.AreEqual(a, currentActor);
+                currentActor = null;
+            };
+
+            testGame.game.DoTurn();
+            GameEvents.ReleaseAllListeners();
+
+            Assert.IsTrue(fired);
+            Assert.IsNull(currentActor);
         }
         // KAI: some of these are integration tests, and belong elsewhere.
         [TestMethod]
