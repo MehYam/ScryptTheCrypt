@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using ScryptTheCrypt;
-using ScryptTheCrypt.Actions;
 
 namespace UnitTest
 {
@@ -26,6 +25,7 @@ namespace UnitTest
         public void TestCleanup()
         {
             testGame = null;
+            GameEvents.ReleaseAllListeners();
         }
         [TestMethod]
         public void DeadMobsShouldReturnVictory()
@@ -93,7 +93,6 @@ namespace UnitTest
             GameEvents.Instance.TurnStart += g => { startFired = true; };
             GameEvents.Instance.TurnEnd += g => { endFired = true; };
             testGame.game.DoTurn();
-            GameEvents.ReleaseAllListeners();
 
             Assert.IsTrue(startFired);
             Assert.IsTrue(endFired);
@@ -118,7 +117,6 @@ namespace UnitTest
             };
 
             testGame.game.DoTurn();
-            GameEvents.ReleaseAllListeners();
 
             Assert.IsTrue(fired);
             Assert.IsNull(currentActor);
@@ -144,7 +142,6 @@ namespace UnitTest
             testGame.ArmPlayer();
             testGame.AddTargetAndAttackToPlayer();
             testGame.game.DoTurn();
-            GameEvents.ReleaseAllListeners();
 
             Assert.IsTrue(startFired);
             Assert.IsTrue(endFired);

@@ -8,6 +8,11 @@ namespace UnitTest
     [TestClass]
     public class GameActorTest
     {
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            GameEvents.ReleaseAllListeners();
+        }
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void ConstructorWithZeroHealthShouldThrow()
@@ -109,7 +114,64 @@ namespace UnitTest
             testActor.DoActions(null);
 
             Assert.AreEqual(currentActor, testActor);
-            GameEvents.ReleaseAllListeners();
+        }
+        [TestMethod]
+        public void DamageShouldFireHealthChangeEvent()
+        {
+            GameActor actor = new GameActor();
+            bool fired = false;
+            GameEvents.Instance.ActorHealthChange += (a, oldHealth, newHealth) =>
+            {
+                fired = true;
+                Assert.AreEqual(oldHealth, a.baseHealth);
+                Assert.AreEqual(newHealth, actor.baseHealth / 2);
+            };
+            actor.TakeDamage(actor.Health / 2);
+            Assert.IsTrue(fired);
+        }
+        [TestMethod]
+        public void HealShouldFireHealthChangeEvent()
+        {
+            GameActor actor = new GameActor();
+            bool fired = false;
+            actor.TakeDamage(actor.baseHealth / 2);
+
+            GameEvents.Instance.ActorHealthChange += (a, oldHealth, newHealth) =>
+            {
+                fired = true;
+                Assert.AreEqual(oldHealth, a.baseHealth / 2);
+                Assert.AreEqual(newHealth, a.baseHealth);
+            };
+            actor.Heal(actor.baseHealth);
+
+            Assert.IsTrue(fired);
+        }
+        [TestMethod]
+        public void ZeroDamageShouldNotFireHealthChange()
+        {
+            GameActor actor = new GameActor();
+
+            bool fired = false;
+            GameEvents.Instance.ActorHealthChange += (a, oldHealth, newHealth) =>
+            {
+                fired = true;
+            };
+            actor.TakeDamage(0);
+            Assert.IsFalse(fired);
+        }
+        [TestMethod]
+        public void IneffectualHealShouldNotFireHealthChange()
+        {
+            GameActor actor = new GameActor();
+            actor.TakeDamage(actor.baseHealth / 2);
+
+            bool fired = false;
+            GameEvents.Instance.ActorHealthChange += (a, oldHealth, newHealth) =>
+            {
+                fired = true;
+            };
+            actor.TakeDamage(0);
+            Assert.IsFalse(fired);
         }
     }
 }

@@ -6,9 +6,29 @@ namespace ScryptTheCrypt
 {
     public sealed class GameActor
     {
+
         public readonly string name;
         public readonly float baseHealth;
-        public float Health { get; private set; }
+
+        private float _health;
+        public float Health
+        {
+            get
+            {
+                return _health;
+            }
+            private set
+            {
+                if (_health != value)
+                {
+                    float oldHealth = _health;
+                    _health = value;
+
+                    GameEvents.Instance.ActorHealthChange_Fire(this, oldHealth, _health);
+                }
+            }
+        }
+
         public GameWeapon Weapon { get; set; }
         public bool Alive { get { return Health > 0; } }
         public GameActor(string name = "anon", float baseHealth = 100)
@@ -19,7 +39,7 @@ namespace ScryptTheCrypt
             }
             this.name = name;
             this.baseHealth = baseHealth;
-            Health = baseHealth;
+            _health = baseHealth;
         }
         public override string ToString()
         {

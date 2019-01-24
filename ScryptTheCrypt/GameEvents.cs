@@ -26,6 +26,8 @@ namespace ScryptTheCrypt
         {
             _singleton = null;
         }
+        //KAI: should remove the Game reference from all of these - we don't really need them everywhere, and maybe not
+        // anywhere
         public event Action<Game> TurnStart = delegate { };
         public event Action<Game> TurnEnd = delegate { };
         public event Action<Game, GameActor> ActorActionsStart = delegate { };
@@ -33,6 +35,7 @@ namespace ScryptTheCrypt
         public event Action<Game, GameActor> TargetChosen = delegate { };
         public event Action<Game, GameActor, GameActor> AttackStart = delegate { };
         public event Action<Game, GameActor, GameActor> AttackEnd = delegate { };
+        public event Action<GameActor, float, float> ActorHealthChange = delegate { };
         public event Action<Game, GameActor> Death = delegate { };
 
         //KAI: it may be wrong/unnecessary to be passing back the Game instance everywhere, but it is convenient
@@ -43,6 +46,7 @@ namespace ScryptTheCrypt
         public void TargetChosen_Fire(Game g, GameActor a) { TargetChosen(g, a); }
         public void AttackStart_Fire(Game g, GameActor attacker, GameActor victim) { AttackStart(g, attacker, victim); }
         public void AttackEnd_Fire(Game g, GameActor attacker, GameActor victim) { AttackEnd(g, attacker, victim); }
+        public void ActorHealthChange_Fire(GameActor a, float oldHealth, float newHealth) { ActorHealthChange(a, oldHealth, newHealth); }
         public void Death_Fire(Game g, GameActor a) { Death(g, a); }
     }
 }
