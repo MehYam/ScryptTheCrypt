@@ -19,7 +19,7 @@ namespace ScryptTheCrypt
         }
         public override string ToString()
         {
-            return string.Format("{0}, damage {1}", name, damage);
+            return $"{name}, damage {damage}";
         }
     }
 }

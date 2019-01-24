@@ -23,7 +23,7 @@ namespace ScryptTheCrypt
         public override string ToString()
         {
             var sb = new System.Text.StringBuilder();
-            sb.AppendFormat("seed {0}", rng.seed);
+            sb.Append($"seed {rng.seed}");
             sb.Append("--players--");
             foreach (var player in players)
             {

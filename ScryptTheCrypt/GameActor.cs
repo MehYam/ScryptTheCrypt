@@ -44,13 +44,13 @@ namespace ScryptTheCrypt
         public override string ToString()
         {
             var sb = new System.Text.StringBuilder();
-            sb.AppendFormat("attributes ({0})", attributes.Count);
+            sb.Append($"attributes ({attributes.Count})");
             foreach (var entry in attributes)
             {
-                sb.AppendFormat(" {0}", entry.Key);
+                sb.Append($" {entry.Key}");
             }
             var weaponText = Weapon != null ? Weapon.ToString() : "none";
-            return string.Format("GameActor '{0}', health {1}/{2}, weapon {3}, attrs {4}", name, Health, baseHealth, weaponText, sb);
+            return $"GameActor '{name}', health {Health}/{baseHealth}, weapon {weaponText}, attrs {sb}";
         }
         public void TakeDamage(float d)
         {
