@@ -125,6 +125,20 @@ namespace UnitTest
                 fired = true;
                 Assert.AreEqual(oldHealth, a.baseHealth);
                 Assert.AreEqual(newHealth, actor.baseHealth / 2);
+                Assert.AreEqual(newHealth, actor.Health);
+            };
+            actor.TakeDamage(actor.Health / 2);
+            Assert.IsTrue(fired);
+        }
+        [TestMethod]
+        public void HealthChangeEventShouldFireAfterChange()
+        {
+            GameActor actor = new GameActor();
+            bool fired = false;
+            GameEvents.Instance.ActorHealthChange += (a, oldHealth, newHealth) =>
+            {
+                fired = true;
+                Assert.AreEqual(newHealth, actor.Health);
             };
             actor.TakeDamage(actor.Health / 2);
             Assert.IsTrue(fired);
