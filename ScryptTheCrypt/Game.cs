@@ -1,6 +1,5 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 using ScryptTheCrypt.Utils;
 
@@ -58,6 +57,33 @@ namespace ScryptTheCrypt
                 }
             }
 
+            GameEvents.Instance.TurnEnd_Fire(this);
+        }
+        public IEnumerator EnumerateTurns()
+        {
+            GameEvents.Instance.TurnStart_Fire(this);
+            foreach(var actor in players)
+            {
+                if (actor.Alive)
+                {
+                    var actions = actor.EnumerateActions(this);
+                    while (actions.MoveNext())
+                    {
+                        yield return null;
+                    }
+                }
+            }
+            foreach(var actor in mobs)
+            {
+                if (actor.Alive)
+                {
+                    var actions = actor.EnumerateActions(this);
+                    while (actions.MoveNext())
+                    {
+                        yield return null;
+                    }
+                }
+            }
             GameEvents.Instance.TurnEnd_Fire(this);
         }
         public Progress GameProgress {

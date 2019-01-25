@@ -187,5 +187,48 @@ namespace UnitTest
             actor.TakeDamage(0);
             Assert.IsFalse(fired);
         }
+        [TestMethod]
+        public void ActionEnumeratorShouldCallActions()
+        {
+            Game game = new Game();
+            GameActor actor = new GameActor();
+
+            MockAction action1 = new MockAction();
+            MockAction action2 = new MockAction();
+
+            actor.AddAction(action1);
+            actor.AddAction(action2);
+
+            var actions = actor.EnumerateActions(game);
+            while (actions.MoveNext());
+
+            Assert.AreEqual(action1.timesCalled, 1);
+            Assert.AreEqual(action2.timesCalled, 1);
+            Assert.IsTrue(action1.orderCalledIn < action2.orderCalledIn);
+            Assert.AreEqual(action1.gCalledWith, game);
+            Assert.AreEqual(action1.aCalledWith, actor);
+        }
+        [TestMethod]
+        public void ActionEnumeratorShouldInvokeEvents()
+        {
+            Game game = new Game();
+            GameActor actor = new GameActor();
+
+            bool startFired = false;
+            bool endFired = false;
+            GameEvents.Instance.ActorActionsStart += (g, a) =>
+            {
+                startFired = true;
+            };
+            GameEvents.Instance.ActorActionsEnd += (g, a) =>
+            {
+                endFired = true;
+            };
+            var actions = actor.EnumerateActions(game);
+            while (actions.MoveNext());
+
+            Assert.IsTrue(startFired);
+            Assert.IsTrue(endFired);
+        }
     }
 }

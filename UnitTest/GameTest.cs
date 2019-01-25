@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using ScryptTheCrypt;
+using ScryptTheCrypt.Actions;
 
 namespace UnitTest
 {
@@ -102,14 +101,14 @@ namespace UnitTest
         {
             bool fired = false;
             GameActor currentActor = null;
-            GameEvents.Instance.ActorActionsStart += (g, a) => 
+            GameEvents.Instance.ActorActionsStart += (g, a) =>
             {
                 fired = true;
                 Assert.AreEqual(g, testGame.game);
                 Assert.IsNull(currentActor);
                 currentActor = a;
             };
-            GameEvents.Instance.ActorActionsEnd += (g, a) => 
+            GameEvents.Instance.ActorActionsEnd += (g, a) =>
             {
                 Assert.AreEqual(g, testGame.game);
                 Assert.AreEqual(a, currentActor);
@@ -127,13 +126,13 @@ namespace UnitTest
         {
             bool startFired = false;
             bool endFired = false;
-            GameEvents.Instance.AttackStart += (g, a, b) => 
+            GameEvents.Instance.AttackStart += (g, a, b) =>
             {
                 Assert.AreEqual(a, testGame.player);
                 Assert.AreEqual(b, testGame.mob);
                 startFired = true;
             };
-            GameEvents.Instance.AttackEnd += (g, a, b) => 
+            GameEvents.Instance.AttackEnd += (g, a, b) =>
             {
                 Assert.AreEqual(a, testGame.player);
                 Assert.AreEqual(b, testGame.mob);
@@ -150,7 +149,7 @@ namespace UnitTest
         public void DoTurnShouldFireDeathEvents()
         {
             bool fired = false;
-            GameEvents.Instance.Death += (g, a) => 
+            GameEvents.Instance.Death += (g, a) =>
             {
                 fired = true;
                 Assert.AreEqual(a, testGame.mob);
@@ -165,13 +164,56 @@ namespace UnitTest
         public void DoTurnShouldFireTargetEvents()
         {
             bool fired = false;
-            GameEvents.Instance.TargetChosen += (g, a) => 
+            GameEvents.Instance.TargetChosen += (g, a) =>
             {
                 fired = true;
             };
             testGame.AddChooseTargetToPlayer();
             testGame.game.DoTurn();
             Assert.IsTrue(fired);
+        }
+        [TestMethod]
+        public void EnumerateTurnShouldRunAllActions()
+        {
+            var game = new Game();
+            var player = new GameActor();
+            var mob = new GameActor();
+
+            var mock1 = new MockAction();
+            var mock2 = new MockAction();
+            player.AddAction(mock1);
+            mob.AddAction(mock2);
+            game.players.Add(player);
+            game.mobs.Add(mob);
+
+            var turns = game.EnumerateTurns();
+            while(turns.MoveNext());
+
+            Assert.AreEqual(1, mock1.timesCalled);
+            Assert.AreEqual(1, mock2.timesCalled);
+            Assert.IsTrue(mock1.orderCalledIn < mock2.orderCalledIn);
+        }
+        [TestMethod]
+        public void EnumerateTurnShouldFireTurnEvents()
+        {
+            var game = new Game();
+            bool startFired = false;
+            bool endFired = false;
+            GameEvents.Instance.TurnStart += g =>
+            {
+                Assert.IsFalse(endFired);
+                startFired = true;
+            };
+            GameEvents.Instance.TurnEnd += g =>
+            {
+                Assert.IsTrue(startFired);
+                endFired = true;
+            };
+            var turns = game.EnumerateTurns();
+            while(turns.MoveNext());
+
+            Assert.IsTrue(startFired);
+            Assert.IsTrue(endFired);
         }
     }
 }

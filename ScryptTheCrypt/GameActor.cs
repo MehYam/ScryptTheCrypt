@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using ScryptTheCrypt.Actions;
 
@@ -110,6 +111,17 @@ namespace ScryptTheCrypt
                 action.act(g, this);
             }
             GameEvents.Instance.ActorActionsEnd_Fire(g, this);
+        }
+        public IEnumerator EnumerateActions(Game g)
+        {
+            GameEvents.Instance.ActorActionsStart_Fire(g, this);
+            foreach (var action in actions)
+            {
+                action.act(g, this);
+                yield return null;
+            }
+            GameEvents.Instance.ActorActionsEnd_Fire(g, this);
+            yield break;
         }
     }
 }

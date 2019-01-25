@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using ScryptTheCrypt;
+﻿using ScryptTheCrypt;
 using ScryptTheCrypt.Actions;
 
 namespace UnitTest
@@ -15,11 +9,15 @@ namespace UnitTest
         public Game gCalledWith;
         public GameActor aCalledWith;
         public int timesCalled = 0;
+        public int orderCalledIn = 0;
+
+        static private int calls = 0;
         public void act(Game g, GameActor actor)
         {
             gCalledWith = g;
             aCalledWith = actor;
             ++timesCalled;
+            orderCalledIn = ++MockAction.calls;
         }
     }
     class TestGameWithActors
