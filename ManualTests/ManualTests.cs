@@ -46,9 +46,39 @@ namespace ManualTests
             game.players.Add(player2);
             game.mobs.Add(mob);
             game.mobs.Add(mob2);
+            GameEvents.Instance.TurnStart += g =>
+            {
+                Console.WriteLine("TurnStart");
+                Console.ReadKey();
+            };
+            GameEvents.Instance.TurnEnd += g =>
+            {
+                Console.WriteLine("TurnEnd");
+                Console.ReadKey();
+            };
+            GameEvents.Instance.ActorActionsStart += (g, a) =>
+            {
+                Console.WriteLine($"{a.name} starting turn");
+                Console.ReadKey();
+            };
+            GameEvents.Instance.ActorActionsEnd += (g, a) =>
+            {
+                Console.WriteLine($"{a.name} ending turn");
+                Console.ReadKey();
+            };
+            GameEvents.Instance.AttackStart += (g, a, b) =>
+            {
+                Console.WriteLine($"{a.name} starts to attack {b.name} with {a.Weapon}");
+                Console.ReadKey();
+            };
+            GameEvents.Instance.ActorHealthChange += (a, o, n) =>
+            {
+                Console.WriteLine($"{a.name} health {o} => {n}");
+                Console.ReadKey();
+            };
             GameEvents.Instance.AttackEnd += (g, a, b) =>
             {
-                Console.WriteLine("{0} {1}/{2} attacked {3} {4}/{5}", a.name, a.Health, a.baseHealth, b.name, b.Health, b.baseHealth);
+                Console.WriteLine($"attack finished, target {b.name} health {b.Health}/{b.baseHealth}");
                 Console.ReadKey();
             };
             GameEvents.Instance.Death += (g, a) =>
