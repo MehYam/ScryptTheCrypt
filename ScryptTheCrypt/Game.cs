@@ -59,7 +59,7 @@ namespace ScryptTheCrypt
 
             GameEvents.Instance.TurnEnd_Fire(this);
         }
-        public IEnumerator EnumerateTurns()
+        public IEnumerator EnumerateTurnActions()
         {
             GameEvents.Instance.TurnStart_Fire(this);
             foreach(var actor in players)

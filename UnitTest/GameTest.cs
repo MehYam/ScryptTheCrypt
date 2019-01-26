@@ -186,7 +186,7 @@ namespace UnitTest
             game.players.Add(player);
             game.mobs.Add(mob);
 
-            var turns = game.EnumerateTurns();
+            var turns = game.EnumerateTurnActions();
             while(turns.MoveNext());
 
             Assert.AreEqual(1, mock1.timesCalled);
@@ -209,7 +209,7 @@ namespace UnitTest
                 Assert.IsTrue(startFired);
                 endFired = true;
             };
-            var turns = game.EnumerateTurns();
+            var turns = game.EnumerateTurnActions();
             while(turns.MoveNext());
 
             Assert.IsTrue(startFired);
