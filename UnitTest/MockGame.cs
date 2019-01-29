@@ -20,7 +20,7 @@ namespace UnitTest
             orderCalledIn = ++MockAction.calls;
         }
     }
-    class TestGameWithActors
+    class TestBattleWithActors
     {
         public GameBattle game;
         public GameActor player = new GameActor("alice");
@@ -29,7 +29,7 @@ namespace UnitTest
         public GameActor mob2 = new GameActor("denise");
         public MockAction playerMockAction = new MockAction();
         public MockAction mobMockAction = new MockAction();
-        public TestGameWithActors(int seed = 2112)
+        public TestBattleWithActors(int seed = 2112)
         {
             game = new GameBattle(seed);
 

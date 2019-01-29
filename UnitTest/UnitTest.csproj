@@ -38,6 +38,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="kaiGameUtil, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\kaiGameUtil.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.2.0\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
     </Reference>
@@ -54,9 +58,9 @@
     <Compile Include="MockGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GameWeaponTest.cs" />
-    <Compile Include="GameTest.cs" />
+    <Compile Include="GameBattleTest.cs" />
     <Compile Include="GameEventsTest.cs" />
-    <Compile Include="UtilsTest.cs" />
+    <Compile Include="GameTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

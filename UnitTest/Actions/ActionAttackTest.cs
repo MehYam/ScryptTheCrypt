@@ -12,7 +12,7 @@ namespace UnitTest.Actions
         [TestMethod]
         public void AttackShouldInflictWeaponDamage()
         {
-            var testGame = new TestGameWithActors(2112);
+            var testGame = new TestBattleWithActors(2112);
             testGame.ArmPlayer();
             testGame.AddTargetAndAttackToPlayer();
             testGame.game.DoTurn();
@@ -22,7 +22,7 @@ namespace UnitTest.Actions
         [TestMethod]
         public void WeaponlessAttackShouldDoNothing()
         {
-            var testGame = new TestGameWithActors(2112);
+            var testGame = new TestBattleWithActors(2112);
             testGame.AddTargetAndAttackToPlayer();
             testGame.game.DoTurn();
 
@@ -31,7 +31,7 @@ namespace UnitTest.Actions
         [TestMethod]
         public void UnpreparedAttackEvenWithWeaponShouldDoNothing()
         {
-            var testGame = new TestGameWithActors(2112);
+            var testGame = new TestBattleWithActors(2112);
             testGame.ArmPlayer();
             testGame.game.DoTurn();
 

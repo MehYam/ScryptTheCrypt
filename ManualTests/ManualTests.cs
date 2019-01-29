@@ -1,8 +1,8 @@
 ﻿using System;
 
+using kaiGameUtil;
 using ScryptTheCrypt;
 using ScryptTheCrypt.Actions;
-using ScryptTheCrypt.Utils;
 namespace ManualTests
 {
     class ManualTests

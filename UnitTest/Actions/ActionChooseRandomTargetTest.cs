@@ -12,7 +12,7 @@ namespace UnitTest.Actions
         [TestMethod]
         public void PseudoRandomPlayerTargetShouldBeChosen()
         {
-            var testGame = new TestGameWithActors(2112);
+            var testGame = new TestBattleWithActors(2112);
 
             testGame.player.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Player));
             testGame.game.DoTurn();
@@ -25,7 +25,7 @@ namespace UnitTest.Actions
         [TestMethod]
         public void PseudoRandomMobTargetShouldBeChosen()
         {
-            var testGame = new TestGameWithActors(2112);
+            var testGame = new TestBattleWithActors(2112);
 
             testGame.player.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Mob));
             testGame.game.DoTurn();

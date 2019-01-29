@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+
+using kaiGameUtil;
 using ScryptTheCrypt.Actions;
 
 namespace ScryptTheCrypt
@@ -9,6 +11,7 @@ namespace ScryptTheCrypt
     {
         public readonly string name;
         public readonly float baseHealth;
+        public Point<int> pos;
 
         private float _health;
         public float Health
