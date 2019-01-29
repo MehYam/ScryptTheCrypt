@@ -14,7 +14,7 @@ namespace UnitTest.Actions
         {
             var testGame = new TestGameWithActors(2112);
 
-            testGame.player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
+            testGame.player.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Player));
             testGame.game.DoTurn();
 
             var target = testGame.player.GetAttribute(GameActor.Attribute.Target);
@@ -27,7 +27,7 @@ namespace UnitTest.Actions
         {
             var testGame = new TestGameWithActors(2112);
 
-            testGame.player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
+            testGame.player.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Mob));
             testGame.game.DoTurn();
 
             var target = testGame.player.GetAttribute(GameActor.Attribute.Target);
@@ -39,26 +39,26 @@ namespace UnitTest.Actions
         [ExpectedException(typeof(ArgumentNullException))]
         public void CallingActWithNoGameThrows()
         {
-            var action = new ActionChooseRandomTarget(Game.ActorAlignment.Player);
+            var action = new ActionChooseRandomTarget(GameBattle.ActorAlignment.Player);
             action.act(null, new GameActor());
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void CallingActWithNoActorThrows()
         {
-            var action = new ActionChooseRandomTarget(Game.ActorAlignment.Player);
-            action.act(new Game(), null);
+            var action = new ActionChooseRandomTarget(GameBattle.ActorAlignment.Player);
+            action.act(new GameBattle(), null);
         }
         [TestMethod]
         public void DeadActorsShouldNotBeTargeted()
         {
-            var game = new Game();
+            var game = new GameBattle();
             var deadHorse = new GameActor();
             deadHorse.TakeDamage(deadHorse.Health);
 
             game.mobs.Add(deadHorse);
 
-            var action = new ActionChooseRandomTarget(Game.ActorAlignment.Mob);
+            var action = new ActionChooseRandomTarget(GameBattle.ActorAlignment.Mob);
             var chooser = new GameActor();
 
             game.players.Add(chooser);
@@ -69,8 +69,8 @@ namespace UnitTest.Actions
         [TestMethod]
         public void NullTargetShouldNotFireEvent()
         {
-            var game = new Game();
-            var action = new ActionChooseRandomTarget(Game.ActorAlignment.Player);
+            var game = new GameBattle();
+            var action = new ActionChooseRandomTarget(GameBattle.ActorAlignment.Player);
             var actor = new GameActor();
 
             GameEvents.Instance.TargetChosen += (g, a) =>

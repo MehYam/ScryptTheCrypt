@@ -6,7 +6,7 @@ namespace ScryptTheCrypt.Actions
 {
     public sealed class ActionAttack : IActorAction
     {
-        public void act(Game g, GameActor actor)
+        public void act(GameBattle g, GameActor actor)
         {
             if (g == null)
             {

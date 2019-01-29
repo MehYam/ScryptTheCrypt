@@ -6,12 +6,12 @@ namespace ScryptTheCrypt.Actions
 {
     public sealed class ActionChooseRandomTarget : IActorAction
     {
-        readonly Game.ActorAlignment targetAlignment;
-        public ActionChooseRandomTarget(Game.ActorAlignment targetAlignment)
+        readonly GameBattle.ActorAlignment targetAlignment;
+        public ActionChooseRandomTarget(GameBattle.ActorAlignment targetAlignment)
         {
             this.targetAlignment = targetAlignment;
         }
-        public void act(Game g, GameActor actor)
+        public void act(GameBattle g, GameActor actor)
         {
             if (g == null)
             {
@@ -29,10 +29,10 @@ namespace ScryptTheCrypt.Actions
             GameActor target = null;
             switch(targetAlignment)
             {
-                case Game.ActorAlignment.Mob:
+                case GameBattle.ActorAlignment.Mob:
                     target = selectLiving(g.mobs);
                     break;
-                case Game.ActorAlignment.Player:
+                case GameBattle.ActorAlignment.Player:
                     target = selectLiving(g.players);
                     break;
             }

@@ -190,7 +190,7 @@ namespace UnitTest
         [TestMethod]
         public void ActionEnumeratorShouldCallActions()
         {
-            Game game = new Game();
+            GameBattle game = new GameBattle();
             GameActor actor = new GameActor();
 
             MockAction action1 = new MockAction();
@@ -211,7 +211,7 @@ namespace UnitTest
         [TestMethod]
         public void ActionEnumeratorShouldInvokeEvents()
         {
-            Game game = new Game();
+            GameBattle game = new GameBattle();
             GameActor actor = new GameActor();
 
             bool startFired = false;

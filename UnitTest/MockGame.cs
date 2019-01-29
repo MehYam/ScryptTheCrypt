@@ -6,13 +6,13 @@ namespace UnitTest
     //KAI: so here's where we look into Moq
     class MockAction : IActorAction
     {
-        public Game gCalledWith;
+        public GameBattle gCalledWith;
         public GameActor aCalledWith;
         public int timesCalled = 0;
         public int orderCalledIn = 0;
 
         static private int calls = 0;
-        public void act(Game g, GameActor actor)
+        public void act(GameBattle g, GameActor actor)
         {
             gCalledWith = g;
             aCalledWith = actor;
@@ -22,7 +22,7 @@ namespace UnitTest
     }
     class TestGameWithActors
     {
-        public Game game;
+        public GameBattle game;
         public GameActor player = new GameActor("alice");
         public GameActor player2 = new GameActor("bob");
         public GameActor mob = new GameActor("carly");
@@ -31,7 +31,7 @@ namespace UnitTest
         public MockAction mobMockAction = new MockAction();
         public TestGameWithActors(int seed = 2112)
         {
-            game = new Game(seed);
+            game = new GameBattle(seed);
 
             player.AddAction(playerMockAction);
             mob.AddAction(mobMockAction);
@@ -47,7 +47,7 @@ namespace UnitTest
         }
         public void AddChooseTargetToPlayer()
         {
-            player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
+            player.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Mob));
         }
         public void AddTargetAndAttackToPlayer()
         {

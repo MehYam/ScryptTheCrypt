@@ -7,7 +7,6 @@ namespace ScryptTheCrypt
 {
     public sealed class GameActor
     {
-
         public readonly string name;
         public readonly float baseHealth;
 
@@ -103,7 +102,7 @@ namespace ScryptTheCrypt
         {
             attributes.Remove(a);
         }
-        public void DoActions(Game g)
+        public void DoActions(GameBattle g)
         {
             GameEvents.Instance.ActorActionsStart_Fire(g, this);
             foreach(var action in actions)
@@ -112,7 +111,7 @@ namespace ScryptTheCrypt
             }
             GameEvents.Instance.ActorActionsEnd_Fire(g, this);
         }
-        public IEnumerator EnumerateActions(Game g)
+        public IEnumerator EnumerateActions(GameBattle g)
         {
             GameEvents.Instance.ActorActionsStart_Fire(g, this);
             foreach (var action in actions)

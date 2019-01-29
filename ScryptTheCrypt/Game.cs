@@ -5,7 +5,7 @@ using ScryptTheCrypt.Utils;
 
 namespace ScryptTheCrypt
 {
-    public sealed class Game
+    public sealed class GameBattle
     {
         public enum ActorAlignment { Player, Mob };
         public enum Progress { InProgress, PlayersWin, MobsWin, Draw };
@@ -15,7 +15,7 @@ namespace ScryptTheCrypt
 
         public readonly RNG rng;
 
-        public Game(int seed = 0)
+        public GameBattle(int seed = 0)
         {
             rng = new RNG(seed);
         }

@@ -11,7 +11,7 @@ namespace UnitTest
         [TestMethod]
         public void TurnWithoutPlayersShouldBeOk()
         {
-            var game = new Game(1000);
+            var game = new GameBattle(1000);
             game.DoTurn();
         }
         TestGameWithActors testGame = null;
@@ -31,14 +31,14 @@ namespace UnitTest
         {
             testGame.KillMobs();
 
-            Assert.AreEqual(testGame.game.GameProgress, Game.Progress.PlayersWin);
+            Assert.AreEqual(testGame.game.GameProgress, GameBattle.Progress.PlayersWin);
         }
         [TestMethod]
         public void DeadPlayersShouldReturnLoss()
         {
             testGame.KillPlayers();
 
-            Assert.AreEqual(testGame.game.GameProgress, Game.Progress.MobsWin);
+            Assert.AreEqual(testGame.game.GameProgress, GameBattle.Progress.MobsWin);
         }
         [TestMethod]
         public void AllDeadShouldReturnDraw()
@@ -46,12 +46,12 @@ namespace UnitTest
             testGame.KillPlayers();
             testGame.KillMobs();
 
-            Assert.AreEqual(testGame.game.GameProgress, Game.Progress.Draw);
+            Assert.AreEqual(testGame.game.GameProgress, GameBattle.Progress.Draw);
         }
         [TestMethod]
         public void SurvivingPlayerAndMobShouldReturnGameInProgress()
         {
-            Assert.AreEqual(testGame.game.GameProgress, Game.Progress.InProgress);
+            Assert.AreEqual(testGame.game.GameProgress, GameBattle.Progress.InProgress);
         }
         [TestMethod]
         public void DeadActorsShouldGetNoTurn()
@@ -175,7 +175,7 @@ namespace UnitTest
         [TestMethod]
         public void EnumerateTurnShouldRunAllActions()
         {
-            var game = new Game();
+            var game = new GameBattle();
             var player = new GameActor();
             var mob = new GameActor();
 
@@ -196,7 +196,7 @@ namespace UnitTest
         [TestMethod]
         public void EnumerateTurnShouldFireTurnEvents()
         {
-            var game = new Game();
+            var game = new GameBattle();
             bool startFired = false;
             bool endFired = false;
             GameEvents.Instance.TurnStart += g =>

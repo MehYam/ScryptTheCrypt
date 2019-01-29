@@ -20,17 +20,17 @@ namespace ManualTests
                 seed = 2112;
             }
 
-            var game = new Game(seed);
+            var game = new GameBattle(seed);
             var player = new GameActor("alice");
             var player2 = new GameActor("bob");
             var mob = new GameActor("carly");
             var mob2 = new GameActor("denise");
 
             // set targeting and affinities
-            player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
-            player2.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
-            mob.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
-            mob2.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
+            player.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Mob));
+            player2.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Mob));
+            mob.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Player));
+            mob2.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Player));
 
             player.AddAction(new ActionAttack());
             player2.AddAction(new ActionAttack());
@@ -86,7 +86,7 @@ namespace ManualTests
                 Console.WriteLine("RIP {0}", a.name);
                 Console.ReadKey();
             };
-            while(game.GameProgress == Game.Progress.InProgress)
+            while(game.GameProgress == GameBattle.Progress.InProgress)
             {
                 Console.WriteLine(game.ToString());
                 Console.WriteLine("Any key to continue...");

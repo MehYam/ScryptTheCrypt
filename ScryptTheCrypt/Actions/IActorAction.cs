@@ -6,6 +6,6 @@ namespace ScryptTheCrypt.Actions
 {
     public interface IActorAction
     {
-        void act(Game g, GameActor actor);
+        void act(GameBattle g, GameActor actor);
     }
 }

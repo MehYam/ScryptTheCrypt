@@ -11,8 +11,8 @@ namespace UnitTest
         public void EventShouldFireOnlyWhenSubscribed()
         {
             int timesFired = 0;
-            var game = new Game();
-            void handler(Game g)
+            var game = new GameBattle();
+            void handler(GameBattle g)
             {
                 ++timesFired;
                 Assert.AreEqual(game, g);
@@ -32,7 +32,7 @@ namespace UnitTest
         public void ReleaseAllListenersShouldUnsubscribe()
         {
             int timesFired = 0;
-            void MyTurnStartHandler(Game g)
+            void MyTurnStartHandler(GameBattle g)
             {
                 ++timesFired;
             }
