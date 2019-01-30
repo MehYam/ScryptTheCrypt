@@ -11,7 +11,6 @@ namespace ScryptTheCrypt
     {
         public readonly string name;
         public readonly float baseHealth;
-        public Point<int> pos;
 
         private float _health;
         public float Health
@@ -43,6 +42,10 @@ namespace ScryptTheCrypt
             this.name = name;
             this.baseHealth = baseHealth;
             _health = baseHealth;
+        }
+        public GameActor Clone()
+        {
+            return this.MemberwiseClone() as GameActor;
         }
         public override string ToString()
         {

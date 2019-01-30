@@ -61,6 +61,7 @@
     <Compile Include="GameBattleTest.cs" />
     <Compile Include="GameEventsTest.cs" />
     <Compile Include="GameTest.cs" />
+    <Compile Include="GameMobGeneratorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

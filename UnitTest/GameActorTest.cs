@@ -14,6 +14,18 @@ namespace UnitTest
             GameEvents.ReleaseAllListeners();
         }
         [TestMethod]
+        public void CloneShouldCreateACopy()
+        {
+            var actor = new GameActor("dummy", 111);
+            actor.TakeDamage(actor.baseHealth / 2);
+
+            var clone = actor.Clone();
+
+            Assert.AreEqual(actor.name, clone.name);
+            Assert.AreEqual(actor.baseHealth, clone.baseHealth);
+            Assert.AreEqual(actor.Health, clone.Health);
+        }
+        [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void ConstructorWithZeroHealthShouldThrow()
         {

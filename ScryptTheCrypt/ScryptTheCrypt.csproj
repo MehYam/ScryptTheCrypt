@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.4</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy $(TargetDir)$(TargetFileName) c:\source\unity\ScryptTheCryptUI\Assets\Lib\$(TargetFileName)&#xD;&#xA;copy $(TargetDir)$(TargetName).pdb c:\source\unity\ScryptTheCryptUI\Assets\Lib\$(TargetName).pdb" />
+    <Exec Command="copy $(TargetDir)$(TargetFileName) c:\source\unity\ScryptTheCryptUI\Assets\Lib\$(TargetFileName)&#xD;&#xA;copy $(TargetDir)$(TargetName).pdb c:\source\unity\ScryptTheCryptUI\Assets\Lib\$(TargetName).pdb&#xD;&#xA;copy $(ProjectDir)..\lib c:\source\unity\ScryptTheCryptUI\Assets\Lib" />
   </Target>
 
 </Project>
