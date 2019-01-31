@@ -108,7 +108,7 @@ namespace ScryptTheCrypt
         {
             attributes.Remove(a);
         }
-        public void DoActions(GameBattle g)
+        public void DoActions(Game g)
         {
             GameEvents.Instance.ActorActionsStart_Fire(g, this);
             foreach(var action in actions)
@@ -117,7 +117,7 @@ namespace ScryptTheCrypt
             }
             GameEvents.Instance.ActorActionsEnd_Fire(g, this);
         }
-        public IEnumerator EnumerateActions(GameBattle g)
+        public IEnumerator EnumerateActions(Game g)
         {
             GameEvents.Instance.ActorActionsStart_Fire(g, this);
             foreach (var action in actions)

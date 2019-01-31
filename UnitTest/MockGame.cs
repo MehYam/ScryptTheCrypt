@@ -6,13 +6,13 @@ namespace UnitTest
     //KAI: so here's where we look into Moq
     class MockAction : IActorAction
     {
-        public GameBattle gCalledWith;
+        public Game gCalledWith;
         public GameActor aCalledWith;
         public int timesCalled = 0;
         public int orderCalledIn = 0;
 
         static private int calls = 0;
-        public void act(GameBattle g, GameActor actor)
+        public void act(Game g, GameActor actor)
         {
             gCalledWith = g;
             aCalledWith = actor;
@@ -20,26 +20,26 @@ namespace UnitTest
             orderCalledIn = ++MockAction.calls;
         }
     }
-    class TestBattleWithActors
+    class TestGameWithActors
     {
-        public GameBattle game;
+        public Game game;
         public GameActor player = new GameActor("alice");
         public GameActor player2 = new GameActor("bob");
         public GameActor mob = new GameActor("carly");
         public GameActor mob2 = new GameActor("denise");
         public MockAction playerMockAction = new MockAction();
         public MockAction mobMockAction = new MockAction();
-        public TestBattleWithActors(int seed = 2112)
+        public TestGameWithActors(int seed = 2112)
         {
-            game = new GameBattle(seed);
+            game = new Game(seed);
 
             player.AddAction(playerMockAction);
             mob.AddAction(mobMockAction);
 
-            game.players.Add(player);
-            game.players.Add(player2);
-            game.mobs.Add(mob);
-            game.mobs.Add(mob2);
+            game.AddActor(player, Game.ActorAlignment.Player);
+            game.AddActor(player2, Game.ActorAlignment.Player);
+            game.AddActor(mob, Game.ActorAlignment.Mob);
+            game.AddActor(mob2, Game.ActorAlignment.Mob);
         }
         public void ArmPlayer(float damage = 20)
         {
@@ -47,7 +47,7 @@ namespace UnitTest
         }
         public void AddChooseTargetToPlayer()
         {
-            player.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Mob));
+            player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
         }
         public void AddTargetAndAttackToPlayer()
         {

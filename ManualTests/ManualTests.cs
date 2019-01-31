@@ -11,6 +11,16 @@ namespace ManualTests
         {
             RunSampleGame1();
         }
+        static void RNG()
+        {
+            var rng = new RNG(2112);
+
+            for (var i = 0; i < 100; ++i)
+            {
+                Console.WriteLine(rng.NextDouble());
+                Console.WriteLine(rng.Next(3, 5));
+            }
+        }
         static void RunSampleGame1()
         {
             Console.WriteLine("input a seed (2112): ");
@@ -19,18 +29,21 @@ namespace ManualTests
             {
                 seed = 2112;
             }
-
-            var game = new GameBattle(seed);
+            RunGame(CreateSampleGame1(seed));
+        }
+        static Game CreateSampleGame1(int seed)
+        {
+            var game = new Game(seed);
             var player = new GameActor("alice");
             var player2 = new GameActor("bob");
             var mob = new GameActor("carly");
             var mob2 = new GameActor("denise");
 
             // set targeting and affinities
-            player.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Mob));
-            player2.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Mob));
-            mob.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Player));
-            mob2.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Player));
+            player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
+            player2.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
+            mob.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
+            mob2.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
 
             player.AddAction(new ActionAttack());
             player2.AddAction(new ActionAttack());
@@ -42,33 +55,41 @@ namespace ManualTests
             mob.Weapon = new GameWeapon("carly's cutlass", 33);
             mob2.Weapon = new GameWeapon("denise's dog", 5);
 
-            game.players.Add(player);
-            game.players.Add(player2);
-            game.mobs.Add(mob);
-            game.mobs.Add(mob2);
-            GameEvents.Instance.TurnStart += g =>
+            game.AddActor(player, Game.ActorAlignment.Player);
+            game.AddActor(player2, Game.ActorAlignment.Player);
+            game.AddActor(mob, Game.ActorAlignment.Mob);
+            game.AddActor(mob2, Game.ActorAlignment.Mob);
+            return game;
+        }
+        static void RunGame(Game game)
+        {
+            GameEvents.Instance.ActorAdded += (g, a, align) =>
             {
-                Console.WriteLine("TurnStart");
+                Console.WriteLine($"ActorAdded: {align}, {a}");
+            };
+            GameEvents.Instance.RoundStart += g =>
+            {
+                Console.WriteLine("RoundStart");
                 Console.ReadKey();
             };
-            GameEvents.Instance.TurnEnd += g =>
+            GameEvents.Instance.RoundEnd += g =>
             {
-                Console.WriteLine("TurnEnd");
+                Console.WriteLine("RoundEnd");
                 Console.ReadKey();
             };
-            GameEvents.Instance.ActorActionsStart += (g, a) =>
+            GameEvents.Instance.ActorTurnStart += (g, a) =>
             {
                 Console.WriteLine($"{a.name} starting turn");
                 Console.ReadKey();
             };
-            GameEvents.Instance.ActorActionsEnd += (g, a) =>
+            GameEvents.Instance.ActorTurnEnd += (g, a) =>
             {
                 Console.WriteLine($"{a.name} ending turn");
                 Console.ReadKey();
             };
             GameEvents.Instance.AttackStart += (g, a, b) =>
             {
-                Console.WriteLine($"{a.name} starts to attack {b.name} with {a.Weapon}");
+                Console.WriteLine($"{a.name} attacking {b.name} with {a.Weapon}");
                 Console.ReadKey();
             };
             GameEvents.Instance.ActorHealthChange += (a, o, n) =>
@@ -86,26 +107,16 @@ namespace ManualTests
                 Console.WriteLine("RIP {0}", a.name);
                 Console.ReadKey();
             };
-            while(game.GameProgress == GameBattle.Progress.InProgress)
+            while(game.GameProgress == Game.Progress.InProgress)
             {
                 Console.WriteLine(game.ToString());
                 Console.WriteLine("Any key to continue...");
                 Console.ReadKey();
-                game.DoTurn();
+                game.PlayRound();
             }
 
             Console.WriteLine("Game ended with {0}", game.GameProgress);
             GameEvents.ReleaseAllListeners();
-        }
-        static void RNG()
-        {
-            var rng = new RNG(2112);
-
-            for (var i = 0; i < 100; ++i)
-            {
-                Console.WriteLine(rng.NextDouble());
-                Console.WriteLine(rng.Next(3, 5));
-            }
         }
     }
 }

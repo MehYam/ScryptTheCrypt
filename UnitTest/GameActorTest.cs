@@ -111,14 +111,14 @@ namespace UnitTest
             GameActor currentActor = null;
             GameActor testActor = new GameActor();
 
-            GameEvents.Instance.ActorActionsStart += (g, a) => 
+            GameEvents.Instance.ActorTurnStart += (g, a) => 
             {
                 Assert.IsNull(currentActor);
                 currentActor = a;
 
                 Assert.AreEqual(testActor, a);
             };
-            GameEvents.Instance.ActorActionsEnd += (g, a) => 
+            GameEvents.Instance.ActorTurnEnd += (g, a) => 
             {
                 Assert.AreEqual(currentActor, a);
                 Assert.AreEqual(testActor, a);
@@ -202,7 +202,7 @@ namespace UnitTest
         [TestMethod]
         public void ActionEnumeratorShouldCallActions()
         {
-            GameBattle game = new GameBattle();
+            Game game = new Game();
             GameActor actor = new GameActor();
 
             MockAction action1 = new MockAction();
@@ -223,16 +223,16 @@ namespace UnitTest
         [TestMethod]
         public void ActionEnumeratorShouldInvokeEvents()
         {
-            GameBattle game = new GameBattle();
+            Game game = new Game();
             GameActor actor = new GameActor();
 
             bool startFired = false;
             bool endFired = false;
-            GameEvents.Instance.ActorActionsStart += (g, a) =>
+            GameEvents.Instance.ActorTurnStart += (g, a) =>
             {
                 startFired = true;
             };
-            GameEvents.Instance.ActorActionsEnd += (g, a) =>
+            GameEvents.Instance.ActorTurnEnd += (g, a) =>
             {
                 endFired = true;
             };

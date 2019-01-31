@@ -12,56 +12,56 @@ namespace UnitTest.Actions
         [TestMethod]
         public void PseudoRandomPlayerTargetShouldBeChosen()
         {
-            var testGame = new TestBattleWithActors(2112);
+            var testGame = new TestGameWithActors(2112);
 
-            testGame.player.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Player));
-            testGame.game.DoTurn();
+            testGame.player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
+            testGame.game.PlayRound();
 
             var target = testGame.player.GetAttribute(GameActor.Attribute.Target);
 
             Assert.IsInstanceOfType(target, typeof(GameActor));
-            Assert.IsTrue(testGame.game.players.Contains(target as GameActor));
+            Assert.IsTrue(testGame.game.Players.Contains(target as GameActor));
         }
         [TestMethod]
         public void PseudoRandomMobTargetShouldBeChosen()
         {
-            var testGame = new TestBattleWithActors(2112);
+            var testGame = new TestGameWithActors(2112);
 
-            testGame.player.AddAction(new ActionChooseRandomTarget(GameBattle.ActorAlignment.Mob));
-            testGame.game.DoTurn();
+            testGame.player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
+            testGame.game.PlayRound();
 
             var target = testGame.player.GetAttribute(GameActor.Attribute.Target);
 
             Assert.IsInstanceOfType(target, typeof(GameActor));
-            Assert.IsTrue(testGame.game.mobs.Contains(target as GameActor));
+            Assert.IsTrue(testGame.game.Mobs.Contains(target as GameActor));
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void CallingActWithNoGameThrows()
         {
-            var action = new ActionChooseRandomTarget(GameBattle.ActorAlignment.Player);
+            var action = new ActionChooseRandomTarget(Game.ActorAlignment.Player);
             action.act(null, new GameActor());
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void CallingActWithNoActorThrows()
         {
-            var action = new ActionChooseRandomTarget(GameBattle.ActorAlignment.Player);
-            action.act(new GameBattle(), null);
+            var action = new ActionChooseRandomTarget(Game.ActorAlignment.Player);
+            action.act(new Game(), null);
         }
         [TestMethod]
         public void DeadActorsShouldNotBeTargeted()
         {
-            var game = new GameBattle();
+            var game = new Game();
             var deadHorse = new GameActor();
             deadHorse.TakeDamage(deadHorse.Health);
 
-            game.mobs.Add(deadHorse);
+            game.AddActor(deadHorse, Game.ActorAlignment.Mob);
 
-            var action = new ActionChooseRandomTarget(GameBattle.ActorAlignment.Mob);
+            var action = new ActionChooseRandomTarget(Game.ActorAlignment.Mob);
             var chooser = new GameActor();
 
-            game.players.Add(chooser);
+            game.AddActor(chooser, Game.ActorAlignment.Player);
             action.act(game, chooser);
 
             Assert.IsNull(chooser.GetAttribute(GameActor.Attribute.Target));
@@ -69,8 +69,8 @@ namespace UnitTest.Actions
         [TestMethod]
         public void NullTargetShouldNotFireEvent()
         {
-            var game = new GameBattle();
-            var action = new ActionChooseRandomTarget(GameBattle.ActorAlignment.Player);
+            var game = new Game();
+            var action = new ActionChooseRandomTarget(Game.ActorAlignment.Player);
             var actor = new GameActor();
 
             GameEvents.Instance.TargetChosen += (g, a) =>

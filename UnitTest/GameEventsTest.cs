@@ -11,20 +11,20 @@ namespace UnitTest
         public void EventShouldFireOnlyWhenSubscribed()
         {
             int timesFired = 0;
-            var game = new GameBattle();
-            void handler(GameBattle g)
+            var game = new Game();
+            void handler(Game g)
             {
                 ++timesFired;
                 Assert.AreEqual(game, g);
             }
 
-            GameEvents.Instance.TurnStart += handler;
-            GameEvents.Instance.TurnStart_Fire(game);
+            GameEvents.Instance.RoundStart += handler;
+            GameEvents.Instance.RoundStart_Fire(game);
 
             Assert.AreEqual(timesFired, 1);
 
-            GameEvents.Instance.TurnStart -= handler;
-            GameEvents.Instance.TurnStart_Fire(game);
+            GameEvents.Instance.RoundStart -= handler;
+            GameEvents.Instance.RoundStart_Fire(game);
 
             Assert.AreEqual(timesFired, 1);
         }
@@ -32,15 +32,15 @@ namespace UnitTest
         public void ReleaseAllListenersShouldUnsubscribe()
         {
             int timesFired = 0;
-            void MyTurnStartHandler(GameBattle g)
+            void MyTurnStartHandler(Game g)
             {
                 ++timesFired;
             }
 
-            GameEvents.Instance.TurnStart += MyTurnStartHandler;
-            GameEvents.Instance.TurnStart_Fire(null);
+            GameEvents.Instance.RoundStart += MyTurnStartHandler;
+            GameEvents.Instance.RoundStart_Fire(null);
             GameEvents.ReleaseAllListeners();
-            GameEvents.Instance.TurnStart_Fire(null);
+            GameEvents.Instance.RoundStart_Fire(null);
 
             Assert.AreEqual(timesFired, 1);
         }

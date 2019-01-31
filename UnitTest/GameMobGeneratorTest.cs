@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using kaiGameUtil;
@@ -56,7 +55,7 @@ namespace UnitTest
             Assert.IsTrue(mobs.Exists(mob => mob.name == "rat"));
 
             var mobs2 = gen.GenerateMobs(NUM, rng);
-            Assert.IsTrue(mobs.Count(mob => mob.name == "mole") != mobs2.Count(mob => mob.name == "mole"));
+            Assert.IsTrue(mobs.FindAll(mob => mob.name == "mole").Count != mobs2.FindAll(mob => mob.name == "mole").Count);
         }
     }
 }
