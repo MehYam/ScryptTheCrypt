@@ -11,9 +11,6 @@ namespace ScryptTheCrypt
         public enum Progress { InProgress, PlayersWin, MobsWin, Draw };
 
         public readonly RNG rng;
-
-        private readonly List<GameActor> players = new List<GameActor>();
-        private readonly List<GameActor> mobs = new List<GameActor>();
         public Game(int seed = 0)
         {
             rng = new RNG(seed);
@@ -40,14 +37,22 @@ namespace ScryptTheCrypt
             }
             return sb.ToString();
         }
+        private readonly List<GameActor> players = new List<GameActor>();
+        private readonly List<GameActor> mobs = new List<GameActor>();
+
+        public IList<GameActor> Players { get { return players.AsReadOnly(); } }
+        public IList<GameActor> Mobs { get { return mobs.AsReadOnly(); } }
+        public void ClearActors(ActorAlignment align)
+        {
+            var actors = align == ActorAlignment.Player ? players : mobs;
+            actors.Clear();
+        }
         public void AddActor(GameActor actor, ActorAlignment align)
         {
             var actors = align == ActorAlignment.Player ? players : mobs;
             actors.Add(actor);
             GameEvents.Instance.ActorAdded_Fire(this, actor, align);
         }
-        public IList<GameActor> Players { get { return players.AsReadOnly(); } }
-        public IList<GameActor> Mobs { get { return mobs.AsReadOnly(); } }
         public void PlayRound()
         {
             GameEvents.Instance.RoundStart_Fire(this);

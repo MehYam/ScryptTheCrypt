@@ -86,6 +86,19 @@ namespace UnitTest
             testGame.game.Mobs[0] = null;
         }
         [TestMethod]
+        public void ClearActorsShouldEmptyActorList()
+        {
+            Assert.IsTrue(testGame.game.Players.Count > 0);
+            Assert.IsTrue(testGame.game.Mobs.Count > 0);
+
+            testGame.game.ClearActors(Game.ActorAlignment.Mob);
+            Assert.IsTrue(testGame.game.Players.Count > 0);
+            Assert.AreEqual(0, testGame.game.Mobs.Count);
+
+            testGame.game.ClearActors(Game.ActorAlignment.Player);
+            Assert.AreEqual(0, testGame.game.Players.Count);
+        }
+        [TestMethod]
         public void DeadMobsShouldReturnVictory()
         {
             testGame.KillMobs();
