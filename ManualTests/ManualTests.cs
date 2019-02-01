@@ -40,7 +40,13 @@ namespace ManualTests
             {
                 seed = 2112;
             }
-            RunGame(CreateSampleGame2(seed), null, false);
+
+            var mobGen = GameMobGenerator.FromString(
+                @"rat, 10, teeth, 4
+                mole, 8, claw, 6
+                lynx, 15, pounce, 10"
+            );
+            RunGame(CreateSampleGame2(seed), mobGen, false);
         }
         static Game CreateSampleGame1(int seed)
         {
@@ -87,7 +93,7 @@ namespace ManualTests
             game.AddActor(CreatePlayer("Beatrice", "bow", 5), Game.ActorAlignment.Player);
             game.AddActor(CreatePlayer("Candy", "cutlass", 6), Game.ActorAlignment.Player);
             game.AddActor(CreatePlayer("Dierdre", "dagger", 3), Game.ActorAlignment.Player);
-            return null;
+            return game;
         }
         static void RunGame(Game game, GameMobGenerator mobGen, bool verbose)
         {
@@ -138,15 +144,28 @@ namespace ManualTests
                     Console.ReadKey();
                 };
             }
-            while (game.GameProgress == Game.Progress.InProgress)
-            {
-                Console.WriteLine(game.ToString());
-                Console.WriteLine("Any key to continue...");
-                Console.ReadKey();
-                game.PlayRound();
-            }
 
-            Console.WriteLine("Game ended with {0}", game.GameProgress);
+            while (game.GameProgress != Game.Progress.MobsWin)
+            {
+                if (mobGen != null)
+                {
+                    Console.WriteLine("Generating mobs");
+                    game.ClearActors(Game.ActorAlignment.Mob);
+                    mobGen.GenerateMobs(4, game.rng).ForEach(mob => { game.AddActor(mob, Game.ActorAlignment.Mob); });
+                }
+                while (game.GameProgress == Game.Progress.InProgress)
+                {
+                    Console.WriteLine(game.ToString());
+                    Console.WriteLine("Any key to continue...");
+                    Console.ReadKey();
+
+                    game.PlayRound();
+
+                    Console.WriteLine($"Round ended with result {game.GameProgress}");
+                    Console.ReadKey();
+                }
+            }
+            Console.WriteLine($"Game ended with result {game.GameProgress}");
             GameEvents.ReleaseAllListeners();
         }
     }
