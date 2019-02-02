@@ -83,8 +83,9 @@ namespace ManualTests
             var game = new Game(seed);
             GameActor CreatePlayer(string name, string weaponName, int weaponDmg)
             {
-                var retval = new GameActor(name);
-                retval.Weapon = new GameWeapon(weaponName, weaponDmg);
+                var retval = new GameActor(name) {
+                    Weapon = new GameWeapon(weaponName, weaponDmg)
+                };
                 retval.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
                 retval.AddAction(new ActionAttack());
                 return retval;

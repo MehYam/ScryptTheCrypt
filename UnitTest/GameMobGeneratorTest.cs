@@ -40,6 +40,12 @@ namespace UnitTest
             Assert.AreEqual(mob.Weapon.name, "teeth");
             Assert.AreEqual(mob.Weapon.damage, 5);
         }
+        [ExpectedException(typeof(FormatException))]
+        [TestMethod]
+        public void FromStringShouldThrowOnBadlyFormedActions()
+        {
+            var gen = GameMobGenerator.FromString("name, 1, wpn, 1, foo");
+        }
         [TestMethod]
         public void GenerateMobsShouldCreateRandomMobList()
         {
