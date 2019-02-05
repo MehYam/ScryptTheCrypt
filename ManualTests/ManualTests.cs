@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using kaiGameUtil;
 using ScryptTheCrypt;
@@ -32,6 +33,26 @@ namespace ManualTests
             }
             RunGame(CreateSampleGame1(seed), null, true);
         }
+        class GameMobGenerator
+        {
+            private readonly Func<GameActor>[] generators;
+            private readonly RNG rng;
+            public GameMobGenerator(RNG rng, params Func<GameActor>[] generators)
+            {
+                this.rng = rng;
+                this.generators = generators;
+            }
+            public GameActor Gen(bool addDefaultAttack)
+            {
+                var retval = generators[rng.NextIndex(generators)]();
+                if (addDefaultAttack)
+                {
+                    retval.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
+                    retval.AddAction(new ActionAttack());
+                }
+                return retval;
+            }
+        }
         static void RunSampleGame2()
         {
             Console.WriteLine("input a seed (2112): ");
@@ -41,12 +62,14 @@ namespace ManualTests
                 seed = 2112;
             }
 
-            var mobGen = GameMobGenerator.FromString(
-                @"rat, 10, teeth, 4
-                mole, 8, claw, 6
-                lynx, 15, pounce, 10"
+            var rng = new RNG(seed);
+            var mobGen = new GameMobGenerator(
+                rng,
+                () => new GameActor("rat", 10, new GameWeapon("teeth", 4)),
+                () => new GameActor("mole", 8, new GameWeapon("claw", 6)),
+                () => new GameActor("lynx", 15, new GameWeapon("pounce", 10))
             );
-            RunGame(CreateSampleGame2(seed), mobGen, false);
+            RunGame(CreateSampleGame2(rng), mobGen, false);
         }
         static Game CreateSampleGame1(int seed)
         {
@@ -78,9 +101,9 @@ namespace ManualTests
             game.AddActor(mob2, Game.ActorAlignment.Mob);
             return game;
         }
-        static Game CreateSampleGame2(int seed)
+        static Game CreateSampleGame2(RNG rng)
         {
-            var game = new Game(seed);
+            var game = new Game(rng);
             GameActor CreatePlayer(string name, string weaponName, int weaponDmg)
             {
                 var retval = new GameActor(name) {
@@ -114,17 +137,17 @@ namespace ManualTests
             };
             GameEvents.Instance.AttackStart += (g, a, b) =>
             {
-                Console.WriteLine($"{a.name} attacking {b.name} with {a.Weapon}");
+                Console.WriteLine($"{a.name}:{a.id.ToString("D4")} attacking {b.name}:{b.id.ToString("D4")} with {a.Weapon}");
                 Console.ReadKey();
             };
             GameEvents.Instance.ActorHealthChange += (a, o, n) =>
             {
-                Console.WriteLine($"{a.name} health {o} => {n}");
+                Console.WriteLine($"{a.name}:{a.id.ToString("D4")} health {o} => {n}");
                 Console.ReadKey();
             };
             GameEvents.Instance.Death += (g, a) =>
             {
-                Console.WriteLine("RIP {0}", a.name);
+                Console.WriteLine($"=-=-=RIP=-=-= {a.name}:{a.id.ToString("D4")}");
                 Console.ReadKey();
             };
             if (verbose)
@@ -152,7 +175,10 @@ namespace ManualTests
                 {
                     Console.WriteLine("Generating mobs");
                     game.ClearActors(Game.ActorAlignment.Mob);
-                    mobGen.GenerateMobs(4, game.rng).ForEach(mob => { game.AddActor(mob, Game.ActorAlignment.Mob); });
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        game.AddActor(mobGen.Gen(true), Game.ActorAlignment.Mob);
+                    }
                 }
                 while (game.GameProgress == Game.Progress.InProgress)
                 {

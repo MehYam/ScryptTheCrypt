@@ -9,6 +9,9 @@ namespace ScryptTheCrypt
 {
     public sealed class GameActor
     {
+        static private int s_instance = 0;
+
+        public readonly int id;
         public readonly string name;
         public readonly float baseHealth;
 
@@ -30,11 +33,11 @@ namespace ScryptTheCrypt
                 }
             }
         }
-
         public GameWeapon Weapon { get; set; }
         public bool Alive { get { return Health > 0; } }
         public GameActor(string name = "anon", float baseHealth = 100)
         {
+            id = ++s_instance;
             if (baseHealth <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(baseHealth), "baseHealth must be greater than zero");
@@ -42,6 +45,10 @@ namespace ScryptTheCrypt
             this.name = name;
             this.baseHealth = baseHealth;
             _health = baseHealth;
+        }
+        public GameActor(string name, float baseHealth, GameWeapon weapon) : this(name, baseHealth)
+        {
+            this.Weapon = weapon;
         }
         public GameActor Clone()
         {
@@ -56,7 +63,7 @@ namespace ScryptTheCrypt
                 sb.Append($" {entry.Key}");
             }
             var weaponText = Weapon != null ? Weapon.ToString() : "none";
-            return $"GameActor '{name}', health {Health}/{baseHealth}, weapon {weaponText}, attrs {sb}";
+            return $"GameActor '{name}':{id.ToString("D4")}, health {Health}/{baseHealth}, weapon {weaponText}, attrs {sb}";
         }
         public void TakeDamage(float d)
         {

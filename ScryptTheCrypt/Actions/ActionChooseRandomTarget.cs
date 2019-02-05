@@ -24,7 +24,7 @@ namespace ScryptTheCrypt.Actions
             {
                 //KAI: readonlycollection doesn't have FindAll... LINQ would clean this up
                 var nondead = new List<GameActor>(actors).FindAll(a => a.Alive);
-                return nondead.Count > 0 ? nondead[g.rng.Next(0, nondead.Count - 1)] : null;
+                return nondead.Count > 0 ? nondead[g.rng.NextIndex(nondead)] : null;
             }
             GameActor target = null;
             switch(targetAlignment)
