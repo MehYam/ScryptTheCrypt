@@ -38,6 +38,15 @@ namespace UnitTest
             var actorNotOk = new GameActor("vampire", -1);
         }
         [TestMethod]
+        public void ConstructorShouldCreateUniqueName()
+        {
+            var actor1 = new GameActor("wolf");
+            var actor2 = new GameActor("wolf");
+
+            Assert.AreEqual(actor1.name, actor2.name);
+            Assert.AreNotEqual(actor1.uniqueName, actor2.uniqueName);
+        }
+        [TestMethod]
         public void BigDamageShouldZeroHealth()
         {
             var actor = new GameActor("doomed", 100);

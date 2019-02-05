@@ -137,34 +137,34 @@ namespace ManualTests
             };
             GameEvents.Instance.AttackStart += (g, a, b) =>
             {
-                Console.WriteLine($"{a.name}:{a.id.ToString("D4")} attacking {b.name}:{b.id.ToString("D4")} with {a.Weapon}");
+                Console.WriteLine($"{a.uniqueName} attacking {b.uniqueName} with {a.Weapon}");
                 Console.ReadKey();
             };
             GameEvents.Instance.ActorHealthChange += (a, o, n) =>
             {
-                Console.WriteLine($"{a.name}:{a.id.ToString("D4")} health {o} => {n}");
+                Console.WriteLine($"{a.uniqueName} health {o} => {n}");
                 Console.ReadKey();
             };
             GameEvents.Instance.Death += (g, a) =>
             {
-                Console.WriteLine($"=-=-=RIP=-=-= {a.name}:{a.id.ToString("D4")}");
+                Console.WriteLine($"=-=-=RIP=-=-= {a.uniqueName}");
                 Console.ReadKey();
             };
             if (verbose)
             {
                 GameEvents.Instance.ActorTurnStart += (g, a) =>
                 {
-                    Console.WriteLine($"{a.name} starting turn");
+                    Console.WriteLine($"{a.uniqueName} starting turn");
                     Console.ReadKey();
                 };
                 GameEvents.Instance.ActorTurnEnd += (g, a) =>
                 {
-                    Console.WriteLine($"{a.name} ending turn");
+                    Console.WriteLine($"{a.uniqueName} ending turn");
                     Console.ReadKey();
                 };
                 GameEvents.Instance.AttackEnd += (g, a, b) =>
                 {
-                    Console.WriteLine($"attack finished, target {b.name} health {b.Health}/{b.baseHealth}");
+                    Console.WriteLine($"attack finished, target {b.uniqueName} health {b.Health}/{b.baseHealth}");
                     Console.ReadKey();
                 };
             }

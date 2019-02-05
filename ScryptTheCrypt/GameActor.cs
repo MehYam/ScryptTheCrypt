@@ -13,6 +13,7 @@ namespace ScryptTheCrypt
 
         public readonly int id;
         public readonly string name;
+        public readonly string uniqueName; // for convenience
         public readonly float baseHealth;
 
         private float _health;
@@ -43,6 +44,7 @@ namespace ScryptTheCrypt
                 throw new ArgumentOutOfRangeException(nameof(baseHealth), "baseHealth must be greater than zero");
             }
             this.name = name;
+            this.uniqueName = $"{name}:{id.ToString("D4")}";
             this.baseHealth = baseHealth;
             _health = baseHealth;
         }
