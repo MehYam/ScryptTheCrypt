@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-using kaiGameUtil;
 using ScryptTheCrypt.Actions;
 
 namespace ScryptTheCrypt
@@ -83,7 +82,6 @@ namespace ScryptTheCrypt
                 other.TakeDamage(Weapon.damage);
             }
         }
-
         // Action/Attribute system.  Actions are anonymous operations on GameActor.  Attributes
         // are variables store, retrieved, and shared between Actions (i.e. chosen target, buffs,
         // debuffs, etc).  

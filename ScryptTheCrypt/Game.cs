@@ -10,14 +10,14 @@ namespace ScryptTheCrypt
         public enum ActorAlignment { Player, Mob };
         public enum Progress { InProgress, PlayersWin, MobsWin, Draw };
 
+        public int NumRounds { get; private set; }
         public readonly RNG rng;
-        public Game(int seed = 0)
-        {
-            rng = new RNG(seed);
-        }
+
+        public Game(int seed = 0) : this(new RNG(seed)) { }
         public Game(RNG rng)
         {
             this.rng = rng;
+            NumRounds = 0;
         }
         public override string ToString()
         {
@@ -55,6 +55,7 @@ namespace ScryptTheCrypt
         }
         public void PlayRound()
         {
+            ++NumRounds;
             GameEvents.Instance.RoundStart_Fire(this);
 
             // loop the actors, having them do their actions
@@ -75,8 +76,9 @@ namespace ScryptTheCrypt
 
             GameEvents.Instance.RoundEnd_Fire(this);
         }
-        public IEnumerator EnumerateRoundActions()
+        public IEnumerator EnumerateRound()
         {
+            ++NumRounds;
             GameEvents.Instance.RoundStart_Fire(this);
             foreach(var actor in players)
             {

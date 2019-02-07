@@ -14,17 +14,51 @@ namespace UnitTest
             var game = new Game(1000);
             game.PlayRound();
         }
-        TestGameWithActors testGame = null;
+        TestGameWithActors testData = null;
         [TestInitialize]
         public void TestInitialize()
         {
-            testGame = new TestGameWithActors();
+            testData = new TestGameWithActors();
         }
         [TestCleanup]
         public void TestCleanup()
         {
-            testGame = null;
+            testData = null;
             GameEvents.ReleaseAllListeners();
+        }
+        [TestMethod]
+        public void NumRoundsShouldStartZero()
+        {
+            Assert.AreEqual(0, testData.game.NumRounds);
+        }
+        [TestMethod]
+        public void PlayRoundShouldIncrementNumRounds()
+        {
+            testData.game.PlayRound();
+
+            Assert.AreEqual(1, testData.game.NumRounds);
+        }
+        [TestMethod]
+        public void EnumerateRoundShouldIncrementNumRounds()
+        {
+            var actions = testData.game.EnumerateRound();
+            Assert.AreEqual(0, testData.game.NumRounds);
+
+            while (actions.MoveNext())
+            {
+                Assert.AreEqual(1, testData.game.NumRounds);
+            }
+
+            Assert.AreEqual(1, testData.game.NumRounds);
+        }
+        [TestMethod]
+        public void RoundStartShouldFireAfterNumRoundsSet()
+        {
+            GameEvents.Instance.RoundStart += g =>
+            {
+                Assert.AreEqual(1, testData.game.NumRounds);
+            };
+            testData.game.PlayRound();
         }
         private void TestAddActor(Game.ActorAlignment align)
         {
@@ -77,84 +111,84 @@ namespace UnitTest
         [TestMethod]
         public void PlayerListShouldBeReadOnly()
         {
-            testGame.game.Players[0] = null;
+            testData.game.Players[0] = null;
         }
         [ExpectedException(typeof(NotSupportedException))]
         [TestMethod]
         public void MobListShouldBeReadOnly()
         {
-            testGame.game.Mobs[0] = null;
+            testData.game.Mobs[0] = null;
         }
         [TestMethod]
         public void ClearActorsShouldEmptyActorList()
         {
-            Assert.IsTrue(testGame.game.Players.Count > 0);
-            Assert.IsTrue(testGame.game.Mobs.Count > 0);
+            Assert.IsTrue(testData.game.Players.Count > 0);
+            Assert.IsTrue(testData.game.Mobs.Count > 0);
 
-            testGame.game.ClearActors(Game.ActorAlignment.Mob);
-            Assert.IsTrue(testGame.game.Players.Count > 0);
-            Assert.AreEqual(0, testGame.game.Mobs.Count);
+            testData.game.ClearActors(Game.ActorAlignment.Mob);
+            Assert.IsTrue(testData.game.Players.Count > 0);
+            Assert.AreEqual(0, testData.game.Mobs.Count);
 
-            testGame.game.ClearActors(Game.ActorAlignment.Player);
-            Assert.AreEqual(0, testGame.game.Players.Count);
+            testData.game.ClearActors(Game.ActorAlignment.Player);
+            Assert.AreEqual(0, testData.game.Players.Count);
         }
         [TestMethod]
         public void DeadMobsShouldReturnVictory()
         {
-            testGame.KillMobs();
+            testData.KillMobs();
 
-            Assert.AreEqual(testGame.game.GameProgress, Game.Progress.PlayersWin);
+            Assert.AreEqual(testData.game.GameProgress, Game.Progress.PlayersWin);
         }
         [TestMethod]
         public void DeadPlayersShouldReturnLoss()
         {
-            testGame.KillPlayers();
+            testData.KillPlayers();
 
-            Assert.AreEqual(testGame.game.GameProgress, Game.Progress.MobsWin);
+            Assert.AreEqual(testData.game.GameProgress, Game.Progress.MobsWin);
         }
         [TestMethod]
         public void AllDeadShouldReturnDraw()
         {
-            testGame.KillPlayers();
-            testGame.KillMobs();
+            testData.KillPlayers();
+            testData.KillMobs();
 
-            Assert.AreEqual(testGame.game.GameProgress, Game.Progress.Draw);
+            Assert.AreEqual(testData.game.GameProgress, Game.Progress.Draw);
         }
         [TestMethod]
         public void SurvivingPlayerAndMobShouldReturnGameInProgress()
         {
-            Assert.AreEqual(testGame.game.GameProgress, Game.Progress.InProgress);
+            Assert.AreEqual(testData.game.GameProgress, Game.Progress.InProgress);
         }
         [TestMethod]
         public void DeadActorsShouldGetNoTurn()
         {
-            testGame.player.TakeDamage(testGame.player.Health);
-            testGame.game.PlayRound();
+            testData.player.TakeDamage(testData.player.Health);
+            testData.game.PlayRound();
 
-            Assert.AreEqual(testGame.playerMockAction.timesCalled, 0);
-            Assert.AreEqual(testGame.mobMockAction.timesCalled, 1);
+            Assert.AreEqual(testData.playerMockAction.timesCalled, 0);
+            Assert.AreEqual(testData.mobMockAction.timesCalled, 1);
         }
         [TestMethod]
         public void DoRoundShouldCallActionWithCorrectGame()
         {
-            testGame.game.PlayRound();
+            testData.game.PlayRound();
 
-            Assert.AreEqual(testGame.playerMockAction.gCalledWith, testGame.game);
-            Assert.AreEqual(testGame.mobMockAction.gCalledWith, testGame.game);
+            Assert.AreEqual(testData.playerMockAction.gCalledWith, testData.game);
+            Assert.AreEqual(testData.mobMockAction.gCalledWith, testData.game);
         }
         [TestMethod]
         public void DoRoundShouldCallActionWithCorrectActor()
         {
-            testGame.game.PlayRound();
-            Assert.AreEqual(testGame.playerMockAction.aCalledWith, testGame.player);
-            Assert.AreEqual(testGame.mobMockAction.aCalledWith, testGame.mob);
+            testData.game.PlayRound();
+            Assert.AreEqual(testData.playerMockAction.aCalledWith, testData.player);
+            Assert.AreEqual(testData.mobMockAction.aCalledWith, testData.mob);
         }
         [TestMethod]
         public void DoRoundShouldCallActionOnce()
         {
-            testGame.game.PlayRound();
-            Assert.AreEqual(testGame.playerMockAction.timesCalled, 1);
-            Assert.AreEqual(testGame.mobMockAction.timesCalled, 1);
+            testData.game.PlayRound();
+            Assert.AreEqual(testData.playerMockAction.timesCalled, 1);
+            Assert.AreEqual(testData.mobMockAction.timesCalled, 1);
         }
         [TestMethod]
         public void DoRoundShouldFireTurnEvents()
@@ -163,7 +197,7 @@ namespace UnitTest
             bool endFired = false;
             GameEvents.Instance.RoundStart += g => { startFired = true; };
             GameEvents.Instance.RoundEnd += g => { endFired = true; };
-            testGame.game.PlayRound();
+            testData.game.PlayRound();
 
             Assert.IsTrue(startFired);
             Assert.IsTrue(endFired);
@@ -176,18 +210,18 @@ namespace UnitTest
             GameEvents.Instance.ActorTurnStart += (g, a) =>
             {
                 fired = true;
-                Assert.AreEqual(g, testGame.game);
+                Assert.AreEqual(g, testData.game);
                 Assert.IsNull(currentActor);
                 currentActor = a;
             };
             GameEvents.Instance.ActorTurnEnd += (g, a) =>
             {
-                Assert.AreEqual(g, testGame.game);
+                Assert.AreEqual(g, testData.game);
                 Assert.AreEqual(a, currentActor);
                 currentActor = null;
             };
 
-            testGame.game.PlayRound();
+            testData.game.PlayRound();
 
             Assert.IsTrue(fired);
             Assert.IsNull(currentActor);
@@ -200,19 +234,19 @@ namespace UnitTest
             bool endFired = false;
             GameEvents.Instance.AttackStart += (g, a, b) =>
             {
-                Assert.AreEqual(a, testGame.player);
-                Assert.AreEqual(b, testGame.mob);
+                Assert.AreEqual(a, testData.player);
+                Assert.AreEqual(b, testData.mob);
                 startFired = true;
             };
             GameEvents.Instance.AttackEnd += (g, a, b) =>
             {
-                Assert.AreEqual(a, testGame.player);
-                Assert.AreEqual(b, testGame.mob);
+                Assert.AreEqual(a, testData.player);
+                Assert.AreEqual(b, testData.mob);
                 endFired = true;
             };
-            testGame.ArmPlayer();
-            testGame.AddTargetAndAttackToPlayer();
-            testGame.game.PlayRound();
+            testData.ArmPlayer();
+            testData.AddTargetAndAttackToPlayer();
+            testData.game.PlayRound();
 
             Assert.IsTrue(startFired);
             Assert.IsTrue(endFired);
@@ -224,13 +258,13 @@ namespace UnitTest
             GameEvents.Instance.Death += (g, a) =>
             {
                 fired = true;
-                Assert.AreEqual(a, testGame.mob);
+                Assert.AreEqual(a, testData.mob);
             };
-            testGame.ArmPlayer(testGame.mob.baseHealth);
-            testGame.AddTargetAndAttackToPlayer();
-            testGame.game.PlayRound();
+            testData.ArmPlayer(testData.mob.baseHealth);
+            testData.AddTargetAndAttackToPlayer();
+            testData.game.PlayRound();
             Assert.IsTrue(fired);
-            Assert.IsFalse(testGame.mob.Alive);
+            Assert.IsFalse(testData.mob.Alive);
         }
         [TestMethod]
         public void DoRoundShouldFireTargetEvents()
@@ -240,8 +274,8 @@ namespace UnitTest
             {
                 fired = true;
             };
-            testGame.AddChooseTargetToPlayer();
-            testGame.game.PlayRound();
+            testData.AddChooseTargetToPlayer();
+            testData.game.PlayRound();
             Assert.IsTrue(fired);
         }
         [TestMethod]
@@ -258,7 +292,7 @@ namespace UnitTest
             game.AddActor(player, Game.ActorAlignment.Player);
             game.AddActor(mob, Game.ActorAlignment.Mob);
 
-            var turns = game.EnumerateRoundActions();
+            var turns = game.EnumerateRound();
             while(turns.MoveNext());
 
             Assert.AreEqual(1, mock1.timesCalled);
@@ -281,7 +315,7 @@ namespace UnitTest
                 Assert.IsTrue(startFired);
                 endFired = true;
             };
-            var turns = game.EnumerateRoundActions();
+            var turns = game.EnumerateRound();
             while(turns.MoveNext());
 
             Assert.IsTrue(startFired);
