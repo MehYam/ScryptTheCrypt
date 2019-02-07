@@ -29,8 +29,8 @@ namespace ScryptTheCrypt
         public event Action<Game, GameActor, Game.ActorAlignment> ActorAdded = delegate { };
         public event Action<Game> RoundStart = delegate { };
         public event Action<Game> RoundEnd = delegate { };
-        public event Action<Game, GameActor> ActorTurnStart = delegate { };
-        public event Action<Game, GameActor> ActorTurnEnd = delegate { };
+        public event Action<Game, GameActor> ActorActionsStart = delegate { };
+        public event Action<Game, GameActor> ActorActionsEnd = delegate { };
         public event Action<Game, GameActor> TargetChosen = delegate { };
         public event Action<Game, GameActor, GameActor> AttackStart = delegate { };
         public event Action<Game, GameActor, GameActor> AttackEnd = delegate { };
@@ -40,8 +40,8 @@ namespace ScryptTheCrypt
         public void ActorAdded_Fire(Game g, GameActor a, Game.ActorAlignment align) { ActorAdded(g, a, align); }
         public void RoundStart_Fire(Game g) { RoundStart(g); }
         public void RoundEnd_Fire(Game g) { RoundEnd(g); }
-        public void ActorActionsStart_Fire(Game g, GameActor a) { ActorTurnStart(g, a); }
-        public void ActorActionsEnd_Fire(Game g, GameActor a) { ActorTurnEnd(g, a); }
+        public void ActorActionsStart_Fire(Game g, GameActor a) { ActorActionsStart(g, a); }
+        public void ActorActionsEnd_Fire(Game g, GameActor a) { ActorActionsEnd(g, a); }
         public void TargetChosen_Fire(Game g, GameActor a) { TargetChosen(g, a); }
         public void AttackStart_Fire(Game g, GameActor attacker, GameActor victim) { AttackStart(g, attacker, victim); }
         public void AttackEnd_Fire(Game g, GameActor attacker, GameActor victim) { AttackEnd(g, attacker, victim); }

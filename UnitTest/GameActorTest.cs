@@ -119,22 +119,75 @@ namespace UnitTest
         {
             GameActor currentActor = null;
             GameActor testActor = new GameActor();
+            bool endFired = false;
 
-            GameEvents.Instance.ActorTurnStart += (g, a) => 
+            GameEvents.Instance.ActorActionsStart += (g, a) => 
             {
+                Assert.IsFalse(endFired);
                 Assert.IsNull(currentActor);
                 currentActor = a;
 
                 Assert.AreEqual(testActor, a);
             };
-            GameEvents.Instance.ActorTurnEnd += (g, a) => 
+            GameEvents.Instance.ActorActionsEnd += (g, a) => 
             {
+                endFired = true;
                 Assert.AreEqual(currentActor, a);
                 Assert.AreEqual(testActor, a);
             };
             testActor.DoActions(null);
 
             Assert.AreEqual(currentActor, testActor);
+            Assert.IsTrue(endFired);
+        }
+        [TestMethod]
+        public void RunScryptShouldFireActorActionsEvents()
+        {
+            GameActor currentActor = null;
+            GameActor testActor = new GameActor();
+            bool endFired = false;
+
+            GameEvents.Instance.ActorActionsStart += (g, a) => 
+            {
+                Assert.IsFalse(endFired);
+                Assert.IsNull(currentActor);
+                currentActor = a;
+
+                Assert.AreEqual(testActor, a);
+            };
+            GameEvents.Instance.ActorActionsEnd += (g, a) => 
+            {
+                endFired = true;
+                Assert.AreEqual(currentActor, a);
+                Assert.AreEqual(testActor, a);
+            };
+            testActor.RunScrypt(null);
+
+            Assert.AreEqual(currentActor, testActor);
+            Assert.IsTrue(endFired);
+        }
+        [ExpectedException(typeof(MoonSharp.Interpreter.ScriptRuntimeException))]
+        [TestMethod]
+        public void SetScryptShouldThrowOnBadScrypt()
+        {
+            var actor = new GameActor();
+            actor.SetScrypt("ur_nofun()");
+        }
+        [TestMethod]
+        public void RunScryptShouldHaveAccessToActor()
+        {
+            var testGame = new Game();
+            var testActor = new GameActor();
+
+            testActor.SetScrypt(@"
+            function scrypt(game, actor)
+                actor.TakeDamage(5)
+            end
+            ");
+
+            testActor.RunScrypt(testGame);
+
+            Assert.AreEqual(testActor.baseHealth - 5, testActor.Health);
         }
         [TestMethod]
         public void DamageShouldFireHealthChangeEvent()
@@ -237,11 +290,11 @@ namespace UnitTest
 
             bool startFired = false;
             bool endFired = false;
-            GameEvents.Instance.ActorTurnStart += (g, a) =>
+            GameEvents.Instance.ActorActionsStart += (g, a) =>
             {
                 startFired = true;
             };
-            GameEvents.Instance.ActorTurnEnd += (g, a) =>
+            GameEvents.Instance.ActorActionsEnd += (g, a) =>
             {
                 endFired = true;
             };

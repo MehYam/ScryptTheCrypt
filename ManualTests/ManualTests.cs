@@ -152,12 +152,12 @@ namespace ManualTests
             };
             if (verbose)
             {
-                GameEvents.Instance.ActorTurnStart += (g, a) =>
+                GameEvents.Instance.ActorActionsStart += (g, a) =>
                 {
                     Console.WriteLine($"{a.uniqueName} starting turn");
                     Console.ReadKey();
                 };
-                GameEvents.Instance.ActorTurnEnd += (g, a) =>
+                GameEvents.Instance.ActorActionsEnd += (g, a) =>
                 {
                     Console.WriteLine($"{a.uniqueName} ending turn");
                     Console.ReadKey();

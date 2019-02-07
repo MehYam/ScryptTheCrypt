@@ -7,6 +7,11 @@ namespace ScryptTheCrypt
 {
     public sealed class Game
     {
+        static Game()
+        {
+            MoonSharp.Interpreter.UserData.RegisterType<Game>();
+        }
+
         public enum ActorAlignment { Player, Mob };
         public enum Progress { InProgress, PlayersWin, MobsWin, Draw };
 

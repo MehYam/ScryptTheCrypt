@@ -207,14 +207,14 @@ namespace UnitTest
         {
             bool fired = false;
             GameActor currentActor = null;
-            GameEvents.Instance.ActorTurnStart += (g, a) =>
+            GameEvents.Instance.ActorActionsStart += (g, a) =>
             {
                 fired = true;
                 Assert.AreEqual(g, testData.game);
                 Assert.IsNull(currentActor);
                 currentActor = a;
             };
-            GameEvents.Instance.ActorTurnEnd += (g, a) =>
+            GameEvents.Instance.ActorActionsEnd += (g, a) =>
             {
                 Assert.AreEqual(g, testData.game);
                 Assert.AreEqual(a, currentActor);
@@ -320,6 +320,20 @@ namespace UnitTest
 
             Assert.IsTrue(startFired);
             Assert.IsTrue(endFired);
+        }
+        [TestMethod]
+        public void MoonsharpShouldHaveAccessToGame()
+        {
+            var testGame = new Game();
+
+            var script = new MoonSharp.Interpreter.Script();
+            script.DoString(@"
+                function accessGame(game)
+                    game.PlayRound()
+                end
+            ");
+            script.Call(script.Globals["accessGame"], testGame);
+            Assert.AreEqual(1, testGame.NumRounds);
         }
     }
 }

@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <Version>0.0.0.1</Version>
+    <Version>0.0.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="MoonSharp" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
