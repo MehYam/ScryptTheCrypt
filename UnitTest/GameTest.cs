@@ -322,7 +322,7 @@ namespace UnitTest
             Assert.IsTrue(endFired);
         }
         [TestMethod]
-        public void MoonsharpShouldHaveAccessToGame()
+        public void MoonsharpCanAccessGame()
         {
             var testGame = new Game();
 

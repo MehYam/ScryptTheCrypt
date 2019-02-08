@@ -174,7 +174,7 @@ namespace UnitTest
             actor.SetScrypt("ur_nofun()");
         }
         [TestMethod]
-        public void RunScryptShouldHaveAccessToActor()
+        public void MoonsharpCanAccessGameActor()
         {
             var testGame = new Game();
             var testActor = new GameActor();

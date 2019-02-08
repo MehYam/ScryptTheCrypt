@@ -11,7 +11,6 @@ namespace ScryptTheCrypt
         {
             MoonSharp.Interpreter.UserData.RegisterType<Game>();
         }
-
         public enum ActorAlignment { Player, Mob };
         public enum Progress { InProgress, PlayersWin, MobsWin, Draw };
 

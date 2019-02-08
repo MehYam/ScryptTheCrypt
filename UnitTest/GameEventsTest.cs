@@ -7,6 +7,11 @@ namespace UnitTest
     [TestClass]
     public class GameEventsTest
     {
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            GameEvents.ReleaseAllListeners();
+        }
         [TestMethod]
         public void EventShouldFireOnlyWhenSubscribed()
         {
@@ -43,6 +48,26 @@ namespace UnitTest
             GameEvents.Instance.RoundStart_Fire(null);
 
             Assert.AreEqual(timesFired, 1);
+        }
+        [TestMethod]
+        public void MoonsharpCanAccessGame()
+        {
+            var script = new MoonSharp.Interpreter.Script();
+            script.DoString(@"
+                function fireGameEvent(events, game)
+                    events.RoundStart_Fire(game)
+                end
+            ");
+
+            var game = new Game();
+            bool fired = false;
+            GameEvents.Instance.RoundStart += g =>
+            {
+                fired = true;
+                Assert.AreEqual(game, g);
+            };
+            script.Call(script.Globals["fireGameEvent"], GameEvents.Instance, game);
+            Assert.IsTrue(fired);
         }
     }
 }
