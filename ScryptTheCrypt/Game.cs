@@ -108,6 +108,28 @@ namespace ScryptTheCrypt
             }
             GameEvents.Instance.RoundEnd_Fire(this);
         }
+        public IEnumerator EnumerateRound_Scrypt()
+        {
+            ++NumRounds;
+            GameEvents.Instance.RoundStart_Fire(this);
+            foreach(var actor in players)
+            {
+                if (actor.Alive)
+                {
+                    actor.RunScrypt(this);
+                    yield return null;
+                }
+            }
+            foreach(var actor in mobs)
+            {
+                if (actor.Alive)
+                {
+                    actor.RunScrypt(this);
+                    yield return null;
+                }
+            }
+            GameEvents.Instance.RoundEnd_Fire(this);
+        }
         public Progress GameProgress {
             get
             {

@@ -10,7 +10,8 @@ namespace ManualTests
         static void Main(string[] args)
         {
             //RunSampleGame1();
-            RunSampleGame2();
+            //RunSampleGame2();
+            RunSampleGame_Scrypt();
         }
         static void RNG()
         {
@@ -186,6 +187,101 @@ namespace ManualTests
                     Console.ReadKey();
 
                     game.PlayRound();
+
+                    Console.WriteLine($"Round ended with result {game.GameProgress}");
+                    Console.ReadKey();
+                }
+            }
+            Console.WriteLine($"Game ended with result {game.GameProgress}");
+            GameEvents.ReleaseAllListeners();
+        }
+        static void RunSampleGame_Scrypt()
+        {
+            Console.WriteLine("input a seed (2112): ");
+            var strSeed = Console.ReadLine();
+            if (!int.TryParse(strSeed, out int seed))
+            {
+                seed = 2112;
+            }
+
+            var rng = new RNG(seed);
+            var mobGen = new GameMobGenerator(
+                rng,
+                () => new GameActor("rat", 10, new GameWeapon("teeth", 4)),
+                () => new GameActor("mole", 8, new GameWeapon("claw", 6)),
+                () => new GameActor("lynx", 15, new GameWeapon("pounce", 10))
+            );
+            RunGame_Scrypt(CreateSampleGame2(rng), mobGen, false);
+        }
+        static void RunGame_Scrypt(Game game, GameMobGenerator mobGen, bool verbose)
+        {
+            GameEvents.Instance.ActorAdded += (g, a, align) =>
+            {
+                Console.WriteLine($"ActorAdded: {align}, {a}");
+            };
+            GameEvents.Instance.RoundStart += g =>
+            {
+                Console.WriteLine("RoundStart");
+                Console.ReadKey();
+            };
+            GameEvents.Instance.RoundEnd += g =>
+            {
+                Console.WriteLine("RoundEnd");
+                Console.ReadKey();
+            };
+            GameEvents.Instance.AttackStart += (g, a, b) =>
+            {
+                Console.WriteLine($"{a.uniqueName} attacking {b.uniqueName} with {a.Weapon}");
+                Console.ReadKey();
+            };
+            GameEvents.Instance.ActorHealthChange += (a, o, n) =>
+            {
+                Console.WriteLine($"{a.uniqueName} health {o} => {n}");
+                Console.ReadKey();
+            };
+            GameEvents.Instance.Death += (g, a) =>
+            {
+                Console.WriteLine($"=-=-=RIP=-=-= {a.uniqueName}");
+                Console.ReadKey();
+            };
+            if (verbose)
+            {
+                GameEvents.Instance.ActorActionsStart += (g, a) =>
+                {
+                    Console.WriteLine($"{a.uniqueName} starting turn");
+                    Console.ReadKey();
+                };
+                GameEvents.Instance.ActorActionsEnd += (g, a) =>
+                {
+                    Console.WriteLine($"{a.uniqueName} ending turn");
+                    Console.ReadKey();
+                };
+                GameEvents.Instance.AttackEnd += (g, a, b) =>
+                {
+                    Console.WriteLine($"attack finished, target {b.uniqueName} health {b.Health}/{b.baseHealth}");
+                    Console.ReadKey();
+                };
+            }
+
+            while (game.GameProgress != Game.Progress.MobsWin)
+            {
+                if (mobGen != null)
+                {
+                    Console.WriteLine("Generating mobs");
+                    game.ClearActors(Game.ActorAlignment.Mob);
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        game.AddActor(mobGen.Gen(true), Game.ActorAlignment.Mob);
+                    }
+                }
+                while (game.GameProgress == Game.Progress.InProgress)
+                {
+                    Console.WriteLine(game.ToString());
+                    Console.WriteLine("Any key to continue...");
+                    Console.ReadKey();
+
+                    var scrypts = game.EnumerateRound_Scrypt();
+                    while (scrypts.MoveNext());
 
                     Console.WriteLine($"Round ended with result {game.GameProgress}");
                     Console.ReadKey();

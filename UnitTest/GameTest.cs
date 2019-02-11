@@ -335,5 +335,23 @@ namespace UnitTest
             script.Call(script.Globals["accessGame"], testGame);
             Assert.AreEqual(1, testGame.NumRounds);
         }
+        [TestMethod]
+        public void EnumerateRound_ScryptShouldRunActorScrypts()
+        {
+            var testGame = new Game();
+            var testActor = new GameActor();
+
+            testActor.SetScrypt(@"
+            function scrypt(game, actor)
+                actor.TakeDamage(5)
+            end
+            ");
+
+            testGame.AddActor(testActor, Game.ActorAlignment.Player);
+            var rounds = testGame.EnumerateRound_Scrypt();
+            while(rounds.MoveNext());
+
+            Assert.AreEqual(testActor.baseHealth - 5, testActor.Health);
+        }
     }
 }
