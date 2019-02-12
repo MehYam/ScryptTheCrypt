@@ -17,10 +17,8 @@ namespace UnitTest.Actions
             testGame.player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
             testGame.game.PlayRound();
 
-            var target = testGame.player.GetAttribute(GameActor.Attribute.Target);
-
-            Assert.IsInstanceOfType(target, typeof(GameActor));
-            Assert.IsTrue(testGame.game.Players.Contains(target as GameActor));
+            Assert.IsNotNull(testGame.player.target);
+            Assert.IsTrue(testGame.game.Players.Contains(testGame.player.target));
         }
         [TestMethod]
         public void PseudoRandomMobTargetShouldBeChosen()
@@ -30,10 +28,8 @@ namespace UnitTest.Actions
             testGame.player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
             testGame.game.PlayRound();
 
-            var target = testGame.player.GetAttribute(GameActor.Attribute.Target);
-
-            Assert.IsInstanceOfType(target, typeof(GameActor));
-            Assert.IsTrue(testGame.game.Mobs.Contains(target as GameActor));
+            Assert.IsNotNull(testGame.player.target);
+            Assert.IsTrue(testGame.game.Mobs.Contains(testGame.player.target));
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -64,7 +60,7 @@ namespace UnitTest.Actions
             game.AddActor(chooser, Game.ActorAlignment.Player);
             action.act(game, chooser);
 
-            Assert.IsNull(chooser.GetAttribute(GameActor.Attribute.Target));
+            Assert.IsNull(chooser.target);
         }
         [TestMethod]
         public void NullTargetShouldNotFireEvent()

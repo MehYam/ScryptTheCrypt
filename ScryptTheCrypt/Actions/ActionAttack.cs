@@ -16,20 +16,20 @@ namespace ScryptTheCrypt.Actions
             {
                 throw new ArgumentNullException(nameof(actor));
             }
-            if (actor.GetAttribute(GameActor.Attribute.Target) is GameActor target)
+            if (actor.target != null)
             {
-                bool wasAlive = target.Alive;
+                bool wasAlive = actor.target.Alive;
 
-                GameEvents.Instance.AttackStart_Fire(g, actor, target);
-                actor.DealDamage((GameActor)target);
-                GameEvents.Instance.AttackEnd_Fire(g, actor, target);
+                GameEvents.Instance.AttackStart_Fire(g, actor, actor.target);
+                actor.DealDamage(actor.target);
+                GameEvents.Instance.AttackEnd_Fire(g, actor, actor.target);
 
                 //KAI: not quite clear who should be firing the events for what;  for example,
                 // shouldn't the actor really fire this?  It doesn't now mainly because the event
                 // passes along the Game instance.  "Might should change this."
-                if (wasAlive && !target.Alive)
+                if (wasAlive && !actor.target.Alive)
                 {
-                    GameEvents.Instance.Death_Fire(g, target);
+                    GameEvents.Instance.Death_Fire(g, actor.target);
                 }
             }
         }

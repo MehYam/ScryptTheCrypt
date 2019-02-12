@@ -7,8 +7,11 @@ namespace ManualTests
 {
     class ManualTests
     {
+        static bool verbose = false;
         static void Main(string[] args)
         {
+            verbose = Array.Exists(args, arg => arg.ToLower() == "verbose");
+
             //RunSampleGame1();
             //RunSampleGame2();
             RunSampleGame_Scrypt();
@@ -31,7 +34,7 @@ namespace ManualTests
             {
                 seed = 2112;
             }
-            RunGame(CreateSampleGame1(seed), null, true);
+            RunGame(CreateSampleGame1(seed), null);
         }
         class GameMobGenerator
         {
@@ -69,7 +72,7 @@ namespace ManualTests
                 () => new GameActor("mole", 8, new GameWeapon("claw", 6)),
                 () => new GameActor("lynx", 15, new GameWeapon("pounce", 10))
             );
-            RunGame(CreateSampleGame2(rng), mobGen, false);
+            RunGame(CreateSampleGame2(rng), mobGen);
         }
         static Game CreateSampleGame1(int seed)
         {
@@ -119,7 +122,7 @@ namespace ManualTests
             game.AddActor(CreatePlayer("Dierdre", "dagger", 3), Game.ActorAlignment.Player);
             return game;
         }
-        static void RunGame(Game game, GameMobGenerator mobGen, bool verbose)
+        static void RunGame(Game game, GameMobGenerator mobGen)
         {
             GameEvents.Instance.ActorAdded += (g, a, align) =>
             {
@@ -211,9 +214,9 @@ namespace ManualTests
                 () => new GameActor("mole", 8, new GameWeapon("claw", 6)),
                 () => new GameActor("lynx", 15, new GameWeapon("pounce", 10))
             );
-            RunGame_Scrypt(CreateSampleGame2(rng), mobGen, false);
+            RunGame_Scrypt(CreateSampleGame2(rng), mobGen);
         }
-        static void RunGame_Scrypt(Game game, GameMobGenerator mobGen, bool verbose)
+        static void RunGame_Scrypt(Game game, GameMobGenerator mobGen)
         {
             GameEvents.Instance.ActorAdded += (g, a, align) =>
             {

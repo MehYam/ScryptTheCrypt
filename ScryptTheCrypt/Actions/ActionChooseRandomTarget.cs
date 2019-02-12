@@ -37,8 +37,8 @@ namespace ScryptTheCrypt.Actions
                     break;
             }
 
-            actor.SetAttribute(GameActor.Attribute.Target, target);
-            if (target != null)
+            actor.target = target;
+            if (actor.target != null)
             {
                 GameEvents.Instance.TargetChosen_Fire(g, actor);
             }

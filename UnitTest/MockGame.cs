@@ -51,7 +51,7 @@ namespace UnitTest
         }
         public void AddTargetAndAttackToPlayer()
         {
-            player.SetAttribute(GameActor.Attribute.Target, mob);
+            player.target = mob;
             player.AddAction(new ActionAttack());
         }
         public void KillPlayers()
