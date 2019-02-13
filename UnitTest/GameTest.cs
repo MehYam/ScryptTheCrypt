@@ -270,7 +270,7 @@ namespace UnitTest
         public void DoRoundShouldFireTargetEvents()
         {
             bool fired = false;
-            GameEvents.Instance.TargetChosen += (g, a) =>
+            GameEvents.Instance.TargetSelected += a =>
             {
                 fired = true;
             };

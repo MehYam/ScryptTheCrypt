@@ -9,6 +9,11 @@ namespace UnitTest.Actions
     [TestClass]
     public class ActionChooseRandomTargetTest
     {
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            GameEvents.ReleaseAllListeners();
+        }
         [TestMethod]
         public void PseudoRandomPlayerTargetShouldBeChosen()
         {
@@ -17,8 +22,8 @@ namespace UnitTest.Actions
             testGame.player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
             testGame.game.PlayRound();
 
-            Assert.IsNotNull(testGame.player.target);
-            Assert.IsTrue(testGame.game.Players.Contains(testGame.player.target));
+            Assert.IsNotNull(testGame.player.Target);
+            Assert.IsTrue(testGame.game.Players.Contains(testGame.player.Target));
         }
         [TestMethod]
         public void PseudoRandomMobTargetShouldBeChosen()
@@ -28,8 +33,8 @@ namespace UnitTest.Actions
             testGame.player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
             testGame.game.PlayRound();
 
-            Assert.IsNotNull(testGame.player.target);
-            Assert.IsTrue(testGame.game.Mobs.Contains(testGame.player.target));
+            Assert.IsNotNull(testGame.player.Target);
+            Assert.IsTrue(testGame.game.Mobs.Contains(testGame.player.Target));
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -60,7 +65,7 @@ namespace UnitTest.Actions
             game.AddActor(chooser, Game.ActorAlignment.Player);
             action.act(game, chooser);
 
-            Assert.IsNull(chooser.target);
+            Assert.IsNull(chooser.Target);
         }
         [TestMethod]
         public void NullTargetShouldNotFireEvent()
@@ -69,7 +74,7 @@ namespace UnitTest.Actions
             var action = new ActionChooseRandomTarget(Game.ActorAlignment.Player);
             var actor = new GameActor();
 
-            GameEvents.Instance.TargetChosen += (g, a) =>
+            GameEvents.Instance.TargetSelected += a =>
             {
                 Assert.Fail("target should not be fired as chosen if null");
             };

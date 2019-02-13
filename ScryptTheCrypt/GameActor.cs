@@ -44,9 +44,21 @@ namespace ScryptTheCrypt
         // allowing clients of GameActor to associate whatever attributes they wanted with actors.  While
         // that would still be cool, for now we're just pounding them out as primitive types, since that
         // works a little easier with lua.
-        public GameActor target;
-        public bool frozen;
-        public bool sleeping;
+        private GameActor _target;
+        public GameActor Target
+        {
+            get { return _target; }
+            set
+            {
+                _target = value;
+                if (_target != null)
+                {
+                    GameEvents.Instance.TargetSelected_Fire(this);
+                }
+            }
+        }
+        public bool Frozen { get; set; }
+        public bool Sleeping { get; set; }
 
         public GameActor(string name = "anon", float baseHealth = 100)
         {
@@ -71,7 +83,7 @@ namespace ScryptTheCrypt
         public override string ToString()
         {
             var sb = new System.Text.StringBuilder();
-            sb.Append($" target: {(target != null ? target.uniqueName : "none")} frozen: {frozen} sleeping: {sleeping} ");
+            sb.Append($" target: {(Target != null ? Target.uniqueName : "none")} frozen: {Frozen} sleeping: {Sleeping} ");
             var weaponText = Weapon != null ? Weapon.ToString() : "none";
             return $"GameActor '{name}':{id.ToString("D4")}, health {Health}/{baseHealth}, weapon {weaponText}, attrs {sb}";
         }
