@@ -34,12 +34,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Jint">
+      <HintPath>..\lib\Jint.dll</HintPath>
+    </Reference>
     <Reference Include="kaiGameUtil, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\kaiGameUtil.dll</HintPath>
-    </Reference>
-    <Reference Include="MoonSharp.Interpreter">
-      <HintPath>..\lib\MoonSharp.Interpreter.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

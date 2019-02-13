@@ -50,13 +50,17 @@ namespace UnitTest
             Assert.AreEqual(timesFired, 1);
         }
         [TestMethod]
-        public void MoonsharpCanAccessGame()
+        public void JintCanAccessGame()
         {
-            var script = new MoonSharp.Interpreter.Script();
-            script.DoString(@"
+            // This is a less valid test now vs. when we were using Moonsharp/Lua.  Then,
+            // we were testing that the classes were registered correctly in the script
+            // engine, now, we're just sort of testing that Jint works.
+            var script = new Jint.Engine();
+            script.Execute(@"
                 function fireGameEvent(events, game)
-                    events.RoundStart_Fire(game)
-                end
+                {
+                    events.RoundStart_Fire(game);
+                }
             ");
 
             var game = new Game();
@@ -66,7 +70,7 @@ namespace UnitTest
                 fired = true;
                 Assert.AreEqual(game, g);
             };
-            script.Call(script.Globals["fireGameEvent"], GameEvents.Instance, game);
+            script.Invoke("fireGameEvent", GameEvents.Instance, game);
             Assert.IsTrue(fired);
         }
     }

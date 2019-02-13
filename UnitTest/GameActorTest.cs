@@ -166,7 +166,7 @@ namespace UnitTest
             Assert.AreEqual(currentActor, testActor);
             Assert.IsTrue(endFired);
         }
-        [ExpectedException(typeof(MoonSharp.Interpreter.ScriptRuntimeException))]
+        [ExpectedException(typeof(Jint.Runtime.JavaScriptException))]
         [TestMethod]
         public void SetScryptShouldThrowOnBadScrypt()
         {
@@ -174,15 +174,15 @@ namespace UnitTest
             actor.SetScrypt("ur_nofun()");
         }
         [TestMethod]
-        public void MoonsharpCanAccessGameActor()
+        public void RunScryptCanAccessGameActor()
         {
             var testGame = new Game();
             var testActor = new GameActor();
 
             testActor.SetScrypt(@"
-            function scrypt(game, actor)
-                actor.TakeDamage(5)
-            end
+            function actorActions(game, actor) {
+                actor.TakeDamage(5);
+            }
             ");
 
             testActor.RunScrypt(testGame);

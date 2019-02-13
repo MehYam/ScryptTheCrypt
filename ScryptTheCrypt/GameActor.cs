@@ -8,10 +8,6 @@ namespace ScryptTheCrypt
 {
     public sealed class GameActor
     {
-        static GameActor()
-        {
-            MoonSharp.Interpreter.UserData.RegisterType<GameActor>();
-        }
         static private int s_instance = 0;
 
         public readonly int id;
@@ -128,18 +124,18 @@ namespace ScryptTheCrypt
             GameEvents.Instance.ActorActionsEnd_Fire(g, this);
             yield break;
         }
-        private MoonSharp.Interpreter.Script scrypt;
-        public void SetScrypt(string lua)
+        private Jint.Engine jint;
+        public void SetScrypt(string js)
         {
-            scrypt = new MoonSharp.Interpreter.Script();
-            scrypt.DoString(lua);
+            jint = new Jint.Engine();
+            jint.Execute(js);
         }
         public void RunScrypt(Game g)
         {
             GameEvents.Instance.ActorActionsStart_Fire(g, this);
-            if (scrypt != null)
+            if (jint != null)
             {
-                scrypt.Call(scrypt.Globals["scrypt"], g, this);
+                jint.Invoke("actorActions", g, this);
             }
             GameEvents.Instance.ActorActionsEnd_Fire(g, this);
         }

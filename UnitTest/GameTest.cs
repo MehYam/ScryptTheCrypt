@@ -322,17 +322,17 @@ namespace UnitTest
             Assert.IsTrue(endFired);
         }
         [TestMethod]
-        public void MoonsharpCanAccessGame()
+        public void JintCanAccessGame()
         {
             var testGame = new Game();
 
-            var script = new MoonSharp.Interpreter.Script();
-            script.DoString(@"
-                function accessGame(game)
+            var script = new Jint.Engine();
+            script.Execute(@"
+                function accessGame(game) {
                     game.PlayRound()
-                end
+                }
             ");
-            script.Call(script.Globals["accessGame"], testGame);
+            script.Invoke("accessGame", testGame);
             Assert.AreEqual(1, testGame.NumRounds);
         }
         [TestMethod]
@@ -342,9 +342,9 @@ namespace UnitTest
             var testActor = new GameActor();
 
             testActor.SetScrypt(@"
-            function scrypt(game, actor)
-                actor.TakeDamage(5)
-            end
+            function actorActions(game, actor) {
+                actor.TakeDamage(5);
+            }
             ");
 
             testGame.AddActor(testActor, Game.ActorAlignment.Player);

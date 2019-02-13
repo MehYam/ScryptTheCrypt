@@ -11,10 +11,6 @@ namespace ScryptTheCrypt
         static GameEvents _singleton = null;
         GameEvents() { } // hide construction
 
-        static GameEvents()
-        {
-            MoonSharp.Interpreter.UserData.RegisterType<GameEvents>();
-        }
         static public GameEvents Instance
         {
             get
