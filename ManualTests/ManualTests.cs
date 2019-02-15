@@ -116,7 +116,7 @@ namespace ManualTests
             var game = new Game(rng);
             GameActor CreatePlayer(string name, string weaponName, int weaponDmg)
             {
-                var retval = new GameActor(name) {
+                var retval = new GameActor(name, 10) {
                     Weapon = new GameWeapon(weaponName, weaponDmg)
                 };
                 retval.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
@@ -234,6 +234,11 @@ namespace ManualTests
                 script.AppendLine(ScryptUtil.attackTarget.body);
                 script.AppendLine(@"
                 function actorActions(g, a) {
+                    var choice = chooseRandom(g.Players, g.rng);
+                    if (choice) {
+                        a.Target = choice;
+                    }
+                    attackTarget(g, a);
                 }
                 ");
                 a.SetScrypt(script.ToString());

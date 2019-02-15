@@ -42,7 +42,10 @@ namespace ScryptTheCrypt
         public static JSFunction attackTarget = new JSFunction(
             "attackTarget",
             @"function {0}(game, actor) {{
-                actor.Attack(actor.target);
+                if (actor.target) {{
+                    actor.Attack(actor.target);
+                    actor.target = null;
+                }}
             }}"
         );
     }

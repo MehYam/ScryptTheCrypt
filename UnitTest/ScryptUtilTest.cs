@@ -69,5 +69,18 @@ namespace UnitTest
 
             Assert.AreEqual(test.mobCarly.Health, test.mobCarly.baseHealth - test.playerAlice.Weapon.damage);
         }
+        [TestMethod]
+        public void AttackTargetShouldClearTargetAfterAttack()
+        {
+            var test = new TestGameWithActors();
+            test.playerAlice.Target = test.mobCarly;
+            test.ArmAlice();
+
+            var jint = new Jint.Engine();
+            jint.Execute(ScryptUtil.attackTarget.body);
+            jint.Invoke(ScryptUtil.attackTarget.name, test.game, test.playerAlice);
+
+            Assert.IsNull(test.playerAlice.Target);
+        }
     }
 }
