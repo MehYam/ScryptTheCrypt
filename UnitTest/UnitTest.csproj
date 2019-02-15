@@ -63,6 +63,7 @@
     <Compile Include="GameWeaponTest.cs" />
     <Compile Include="GameTest.cs" />
     <Compile Include="GameEventsTest.cs" />
+    <Compile Include="ScryptUtilTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ScryptTheCrypt\ScryptTheCrypt.csproj">

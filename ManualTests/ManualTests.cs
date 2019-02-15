@@ -138,7 +138,7 @@ namespace ManualTests
                 Console.WriteLine("RoundEnd");
                 Console.ReadKey();
             };
-            GameEvents.Instance.AttackStart += (g, a, b) =>
+            GameEvents.Instance.AttackStart += (a, b) =>
             {
                 Console.WriteLine($"{a.uniqueName} attacking {b.uniqueName} with {a.Weapon}");
                 Console.ReadKey();
@@ -148,7 +148,7 @@ namespace ManualTests
                 Console.WriteLine($"{a.uniqueName} health {o} => {n}");
                 Console.ReadKey();
             };
-            GameEvents.Instance.Death += (g, a) =>
+            GameEvents.Instance.Death += a =>
             {
                 Console.WriteLine($"=-=-=RIP=-=-= {a.uniqueName}");
                 Console.ReadKey();
@@ -165,7 +165,7 @@ namespace ManualTests
                     Console.WriteLine($"{a.uniqueName} ending turn");
                     Console.ReadKey();
                 };
-                GameEvents.Instance.AttackEnd += (g, a, b) =>
+                GameEvents.Instance.AttackEnd += (a, b) =>
                 {
                     Console.WriteLine($"attack finished, target {b.uniqueName} health {b.Health}/{b.baseHealth}");
                     Console.ReadKey();
@@ -221,6 +221,12 @@ namespace ManualTests
             GameEvents.Instance.ActorAdded += (g, a, align) =>
             {
                 Console.WriteLine($"ActorAdded: {align}, {a}");
+
+                a.SetScrypt(@"
+                function actorActions(g, a) {
+                    
+                }
+                ");
             };
             GameEvents.Instance.RoundStart += g =>
             {
@@ -232,7 +238,7 @@ namespace ManualTests
                 Console.WriteLine("RoundEnd");
                 Console.ReadKey();
             };
-            GameEvents.Instance.AttackStart += (g, a, b) =>
+            GameEvents.Instance.AttackStart += (a, b) =>
             {
                 Console.WriteLine($"{a.uniqueName} attacking {b.uniqueName} with {a.Weapon}");
                 Console.ReadKey();
@@ -242,7 +248,7 @@ namespace ManualTests
                 Console.WriteLine($"{a.uniqueName} health {o} => {n}");
                 Console.ReadKey();
             };
-            GameEvents.Instance.Death += (g, a) =>
+            GameEvents.Instance.Death += a =>
             {
                 Console.WriteLine($"=-=-=RIP=-=-= {a.uniqueName}");
                 Console.ReadKey();
@@ -259,7 +265,7 @@ namespace ManualTests
                     Console.WriteLine($"{a.uniqueName} ending turn");
                     Console.ReadKey();
                 };
-                GameEvents.Instance.AttackEnd += (g, a, b) =>
+                GameEvents.Instance.AttackEnd += (a, b) =>
                 {
                     Console.WriteLine($"attack finished, target {b.uniqueName} health {b.Health}/{b.baseHealth}");
                     Console.ReadKey();

@@ -162,7 +162,7 @@ namespace UnitTest
         [TestMethod]
         public void DeadActorsShouldGetNoTurn()
         {
-            testData.player.TakeDamage(testData.player.Health);
+            testData.playerAlice.TakeDamage(testData.playerAlice.Health);
             testData.game.PlayRound();
 
             Assert.AreEqual(testData.playerMockAction.timesCalled, 0);
@@ -180,8 +180,8 @@ namespace UnitTest
         public void DoRoundShouldCallActionWithCorrectActor()
         {
             testData.game.PlayRound();
-            Assert.AreEqual(testData.playerMockAction.aCalledWith, testData.player);
-            Assert.AreEqual(testData.mobMockAction.aCalledWith, testData.mob);
+            Assert.AreEqual(testData.playerMockAction.aCalledWith, testData.playerAlice);
+            Assert.AreEqual(testData.mobMockAction.aCalledWith, testData.mobCarly);
         }
         [TestMethod]
         public void DoRoundShouldCallActionOnce()
@@ -232,19 +232,19 @@ namespace UnitTest
         {
             bool startFired = false;
             bool endFired = false;
-            GameEvents.Instance.AttackStart += (g, a, b) =>
+            GameEvents.Instance.AttackStart += (a, b) =>
             {
-                Assert.AreEqual(a, testData.player);
-                Assert.AreEqual(b, testData.mob);
+                Assert.AreEqual(a, testData.playerAlice);
+                Assert.AreEqual(b, testData.mobCarly);
                 startFired = true;
             };
-            GameEvents.Instance.AttackEnd += (g, a, b) =>
+            GameEvents.Instance.AttackEnd += (a, b) =>
             {
-                Assert.AreEqual(a, testData.player);
-                Assert.AreEqual(b, testData.mob);
+                Assert.AreEqual(a, testData.playerAlice);
+                Assert.AreEqual(b, testData.mobCarly);
                 endFired = true;
             };
-            testData.ArmPlayer();
+            testData.ArmAlice();
             testData.AddTargetAndAttackToPlayer();
             testData.game.PlayRound();
 
@@ -255,16 +255,16 @@ namespace UnitTest
         public void DoRoundShouldFireDeathEvents()
         {
             bool fired = false;
-            GameEvents.Instance.Death += (g, a) =>
+            GameEvents.Instance.Death += a =>
             {
                 fired = true;
-                Assert.AreEqual(a, testData.mob);
+                Assert.AreEqual(a, testData.mobCarly);
             };
-            testData.ArmPlayer(testData.mob.baseHealth);
+            testData.ArmAlice(testData.mobCarly.baseHealth);
             testData.AddTargetAndAttackToPlayer();
             testData.game.PlayRound();
             Assert.IsTrue(fired);
-            Assert.IsFalse(testData.mob.Alive);
+            Assert.IsFalse(testData.mobCarly.Alive);
         }
         [TestMethod]
         public void DoRoundShouldFireTargetEvents()

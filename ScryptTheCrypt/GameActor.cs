@@ -26,10 +26,16 @@ namespace ScryptTheCrypt
             {
                 if (_health != value)
                 {
+                    bool wasAlive = Alive;
                     float oldHealth = _health;
+
                     _health = value;
 
                     GameEvents.Instance.ActorHealthChange_Fire(this, oldHealth, _health);
+                    if (wasAlive && !Alive)
+                    {
+                        GameEvents.Instance.Death_Fire(this);
+                    }
                 }
             }
         }
@@ -91,12 +97,14 @@ namespace ScryptTheCrypt
         {
             Health = Math.Min(baseHealth, Health + h);
         }
-        public void DealDamage(GameActor other)
+        public void Attack(GameActor other)
         {
             if (other == null) throw new ArgumentNullException(nameof(other), "other actor is null");
             if (Weapon != null)
             {
+                GameEvents.Instance.AttackStart_Fire(this, other);
                 other.TakeDamage(Weapon.damage);
+                GameEvents.Instance.AttackEnd_Fire(this, other);
             }
         }
         readonly List<IActorAction> actions = new List<IActorAction>();

@@ -13,11 +13,11 @@ namespace UnitTest.Actions
         public void AttackShouldInflictWeaponDamage()
         {
             var testGame = new TestGameWithActors(2112);
-            testGame.ArmPlayer();
+            testGame.ArmAlice();
             testGame.AddTargetAndAttackToPlayer();
             testGame.game.PlayRound();
 
-            Assert.AreEqual(testGame.mob.Health, testGame.mob.baseHealth - testGame.player.Weapon.damage);
+            Assert.AreEqual(testGame.mobCarly.Health, testGame.mobCarly.baseHealth - testGame.playerAlice.Weapon.damage);
         }
         [TestMethod]
         public void WeaponlessAttackShouldDoNothing()
@@ -26,16 +26,16 @@ namespace UnitTest.Actions
             testGame.AddTargetAndAttackToPlayer();
             testGame.game.PlayRound();
 
-            Assert.AreEqual(testGame.mob.Health, testGame.mob.baseHealth);
+            Assert.AreEqual(testGame.mobCarly.Health, testGame.mobCarly.baseHealth);
         }
         [TestMethod]
         public void UnpreparedAttackEvenWithWeaponShouldDoNothing()
         {
             var testGame = new TestGameWithActors(2112);
-            testGame.ArmPlayer();
+            testGame.ArmAlice();
             testGame.game.PlayRound();
 
-            Assert.AreEqual(testGame.mob.Health, testGame.mob.baseHealth);
+            Assert.AreEqual(testGame.mobCarly.Health, testGame.mobCarly.baseHealth);
         }
     }
 }

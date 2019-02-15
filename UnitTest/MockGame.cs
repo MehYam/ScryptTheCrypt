@@ -23,46 +23,46 @@ namespace UnitTest
     class TestGameWithActors
     {
         public Game game;
-        public GameActor player = new GameActor("alice");
-        public GameActor player2 = new GameActor("bob");
-        public GameActor mob = new GameActor("carly");
-        public GameActor mob2 = new GameActor("denise");
+        public GameActor playerAlice = new GameActor("alice");
+        public GameActor playerBob = new GameActor("bob");
+        public GameActor mobCarly = new GameActor("carly");
+        public GameActor mobDenise = new GameActor("denise");
         public MockAction playerMockAction = new MockAction();
         public MockAction mobMockAction = new MockAction();
         public TestGameWithActors(int seed = 2112)
         {
             game = new Game(seed);
 
-            player.AddAction(playerMockAction);
-            mob.AddAction(mobMockAction);
+            playerAlice.AddAction(playerMockAction);
+            mobCarly.AddAction(mobMockAction);
 
-            game.AddActor(player, Game.ActorAlignment.Player);
-            game.AddActor(player2, Game.ActorAlignment.Player);
-            game.AddActor(mob, Game.ActorAlignment.Mob);
-            game.AddActor(mob2, Game.ActorAlignment.Mob);
+            game.AddActor(playerAlice, Game.ActorAlignment.Player);
+            game.AddActor(playerBob, Game.ActorAlignment.Player);
+            game.AddActor(mobCarly, Game.ActorAlignment.Mob);
+            game.AddActor(mobDenise, Game.ActorAlignment.Mob);
         }
-        public void ArmPlayer(float damage = 20)
+        public void ArmAlice(float damage = 20)
         {
-            player.Weapon = new GameWeapon("fist of testing rage", damage);
+            playerAlice.Weapon = new GameWeapon("fist of testing rage", damage);
         }
         public void AddChooseTargetToPlayer()
         {
-            player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
+            playerAlice.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
         }
         public void AddTargetAndAttackToPlayer()
         {
-            player.Target = mob;
-            player.AddAction(new ActionAttack());
+            playerAlice.Target = mobCarly;
+            playerAlice.AddAction(new ActionAttack());
         }
         public void KillPlayers()
         {
-            player.TakeDamage(player.Health);
-            player2.TakeDamage(player2.Health);
+            playerAlice.TakeDamage(playerAlice.Health);
+            playerBob.TakeDamage(playerBob.Health);
         }
         public void KillMobs()
         {
-            mob.TakeDamage(mob.Health);
-            mob2.TakeDamage(mob2.Health);
+            mobCarly.TakeDamage(mobCarly.Health);
+            mobDenise.TakeDamage(mobDenise.Health);
         }
     }
 }

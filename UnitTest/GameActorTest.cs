@@ -74,9 +74,23 @@ namespace UnitTest
         public void ActorCanDieFromDamage()
         {
             var actor = new GameActor("why me", 100);
-            actor.TakeDamage(200);
+            actor.TakeDamage(actor.baseHealth);
 
             Assert.IsFalse(actor.Alive);
+        }
+        [TestMethod]
+        public void DeathShouldFireEvent()
+        {
+            bool didFire = false;
+            var a = new GameActor("again really?", 100);
+            GameEvents.Instance.Death += deceased =>
+            {
+                Assert.AreEqual(a, deceased);
+                didFire = true;
+            };
+
+            a.TakeDamage(a.baseHealth);
+            Assert.IsTrue(didFire);
         }
         [TestMethod]
         public void WeaponlessActorDoesNoDamage()
@@ -84,7 +98,7 @@ namespace UnitTest
             var a = new GameActor();
             var b = new GameActor();
 
-            a.DealDamage(b);
+            a.Attack(b);
 
             Assert.AreEqual(b.baseHealth, b.Health);
             Assert.IsTrue(b.Alive);
@@ -97,7 +111,7 @@ namespace UnitTest
 
             a.Weapon = new GameWeapon("lunchbox", b.baseHealth - 1);
 
-            a.DealDamage(b);
+            a.Attack(b);
             Assert.AreEqual(b.Health, b.baseHealth - a.Weapon.damage);
             Assert.IsTrue(a.Alive);
             Assert.IsTrue(b.Alive);
@@ -110,9 +124,33 @@ namespace UnitTest
 
             a.Weapon = new GameWeapon("deadly apple", b.baseHealth);
 
-            a.DealDamage(b);
+            a.Attack(b);
             Assert.AreEqual(b.Health, 0);
             Assert.IsFalse(b.Alive);
+        }
+        [TestMethod]
+        public void AttackShouldFireEvents()
+        {
+            var a = new GameActor();
+            var b = new GameActor();
+            int progress = 0;
+            GameEvents.Instance.AttackStart += (actorA, actorB) =>
+            {
+                Assert.AreEqual(0, progress++);
+                Assert.AreEqual(a, actorA);
+                Assert.AreEqual(b, actorB);
+            };
+            GameEvents.Instance.AttackEnd += (actorA, actorB) =>
+            {
+                Assert.AreEqual(1, progress++);
+                Assert.AreEqual(a, actorA);
+                Assert.AreEqual(b, actorB);
+            };
+
+            a.Weapon = new GameWeapon("deadly apple", b.baseHealth / 2);
+            a.Attack(b);
+
+            Assert.AreEqual(2, progress);
         }
         [TestMethod]
         public void DoActionsShouldFireActorActionsEvents()

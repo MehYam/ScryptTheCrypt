@@ -19,22 +19,22 @@ namespace UnitTest.Actions
         {
             var testGame = new TestGameWithActors(2112);
 
-            testGame.player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
+            testGame.playerAlice.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
             testGame.game.PlayRound();
 
-            Assert.IsNotNull(testGame.player.Target);
-            Assert.IsTrue(testGame.game.Players.Contains(testGame.player.Target));
+            Assert.IsNotNull(testGame.playerAlice.Target);
+            Assert.IsTrue(testGame.game.Players.Contains(testGame.playerAlice.Target));
         }
         [TestMethod]
         public void PseudoRandomMobTargetShouldBeChosen()
         {
             var testGame = new TestGameWithActors(2112);
 
-            testGame.player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
+            testGame.playerAlice.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
             testGame.game.PlayRound();
 
-            Assert.IsNotNull(testGame.player.Target);
-            Assert.IsTrue(testGame.game.Mobs.Contains(testGame.player.Target));
+            Assert.IsNotNull(testGame.playerAlice.Target);
+            Assert.IsTrue(testGame.game.Mobs.Contains(testGame.playerAlice.Target));
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]

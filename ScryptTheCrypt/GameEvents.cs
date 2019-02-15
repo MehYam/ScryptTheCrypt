@@ -32,10 +32,10 @@ namespace ScryptTheCrypt
         public event Action<Game, GameActor> ActorActionsStart = delegate { };
         public event Action<Game, GameActor> ActorActionsEnd = delegate { };
         public event Action<GameActor> TargetSelected = delegate { };
-        public event Action<Game, GameActor, GameActor> AttackStart = delegate { };
-        public event Action<Game, GameActor, GameActor> AttackEnd = delegate { };
+        public event Action<GameActor, GameActor> AttackStart = delegate { };
+        public event Action<GameActor, GameActor> AttackEnd = delegate { };
         public event Action<GameActor, float, float> ActorHealthChange = delegate { };
-        public event Action<Game, GameActor> Death = delegate { };
+        public event Action<GameActor> Death = delegate { };
 
         public void ActorAdded_Fire(Game g, GameActor a, Game.ActorAlignment align) { ActorAdded(g, a, align); }
         public void RoundStart_Fire(Game g) { RoundStart(g); }
@@ -43,9 +43,9 @@ namespace ScryptTheCrypt
         public void ActorActionsStart_Fire(Game g, GameActor a) { ActorActionsStart(g, a); }
         public void ActorActionsEnd_Fire(Game g, GameActor a) { ActorActionsEnd(g, a); }
         public void TargetSelected_Fire(GameActor a) { TargetSelected(a); }
-        public void AttackStart_Fire(Game g, GameActor attacker, GameActor victim) { AttackStart(g, attacker, victim); }
-        public void AttackEnd_Fire(Game g, GameActor attacker, GameActor victim) { AttackEnd(g, attacker, victim); }
+        public void AttackStart_Fire(GameActor attacker, GameActor victim) { AttackStart(attacker, victim); }
+        public void AttackEnd_Fire(GameActor attacker, GameActor victim) { AttackEnd(attacker, victim); }
         public void ActorHealthChange_Fire(GameActor a, float oldHealth, float newHealth) { ActorHealthChange(a, oldHealth, newHealth); }
-        public void Death_Fire(Game g, GameActor a) { Death(g, a); }
+        public void Death_Fire(GameActor a) { Death(a); }
     }
 }
