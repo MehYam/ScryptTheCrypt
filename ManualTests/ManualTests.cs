@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Reflection;
+using System.Text;
 using kaiGameUtil;
 using ScryptTheCrypt;
 using ScryptTheCrypt.Actions;
@@ -10,6 +11,12 @@ namespace ManualTests
         static bool verbose = false;
         static void Main(string[] args)
         {
+            var dlls = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
+            foreach (var dll in dlls)
+            {
+                Console.WriteLine($"loaded: {dll.Name} version {dll.Version}");
+            }
+
             verbose = Array.Exists(args, arg => arg.ToLower() == "verbose");
 
             //RunSampleGame1();
@@ -222,11 +229,14 @@ namespace ManualTests
             {
                 Console.WriteLine($"ActorAdded: {align}, {a}");
 
-                a.SetScrypt(@"
+                var script = new StringBuilder();
+                script.AppendLine(ScryptUtil.chooseRandom.body);
+                script.AppendLine(ScryptUtil.attackTarget.body);
+                script.AppendLine(@"
                 function actorActions(g, a) {
-                    
                 }
                 ");
+                a.SetScrypt(script.ToString());
             };
             GameEvents.Instance.RoundStart += g =>
             {

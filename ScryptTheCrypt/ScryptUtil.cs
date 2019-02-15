@@ -27,9 +27,14 @@ namespace ScryptTheCrypt
         // return ... && ....; trick
         public static JSFunction chooseRandom = new JSFunction(
             "chooseRandom",
-            @"function {0}(list, rng) {{
-                var count = list.Count;
-                var living = list.filter(function(a) {{  return a.Alive; }});
+            @"function {0}(actors, rng) {{
+                var living = [];
+                var e = actors.GetEnumerator();
+                while (e.MoveNext()) {{
+                    if (e.Current.Alive) {{
+                        living.push(e.Current);
+                    }}
+                }}
                 if (!living.length) return null;
                 return living[ rng.Next(0, living.length - 1) ];
             }}"

@@ -30,11 +30,10 @@ namespace UnitTest
             jint.Execute(ScryptUtil.chooseRandom.body);
 
             var rng = new RNG(0);
-            var players = ScryptUtil.IListToArray(test.game.Players);
 
             void TestChooseRandom(GameActor actor)
             {
-                Assert.AreEqual(actor, jint.Invoke(ScryptUtil.chooseRandom.name, players, rng).ToObject());
+                Assert.AreEqual(actor, jint.Invoke(ScryptUtil.chooseRandom.name, test.game.Players, rng).ToObject());
             }
             TestChooseRandom(test.playerBob);
             TestChooseRandom(test.playerAlice);
@@ -53,9 +52,7 @@ namespace UnitTest
             jint.Execute(ScryptUtil.chooseRandom.body);
 
             var rng = new RNG(0);
-            var players = ScryptUtil.IListToArray(test.game.Players);
-
-            var choice  = jint.Invoke(ScryptUtil.chooseRandom.name, players, rng);
+            var choice  = jint.Invoke(ScryptUtil.chooseRandom.name, test.game.Players, rng);
 
             Assert.IsTrue(choice.IsNull());
         }
