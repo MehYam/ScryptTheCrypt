@@ -16,7 +16,7 @@ namespace UnitTest
         [TestMethod]
         public void CloneShouldCreateACopy()
         {
-            var actor = new GameActor("dummy", 111);
+            var actor = new GameActor(GameActor.Alignment.Player, "dummy", 111);
             actor.TakeDamage(actor.baseHealth / 2);
 
             var clone = actor.Clone();
@@ -29,19 +29,19 @@ namespace UnitTest
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void ConstructorWithZeroHealthShouldThrow()
         {
-            var actorNotOk = new GameActor("zombie", 0);
+            var actorNotOk = new GameActor(GameActor.Alignment.Mob, "zombie", 0);
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void ConstructorWithNegativeHealthShouldThrow()
         {
-            var actorNotOk = new GameActor("vampire", -1);
+            var actorNotOk = new GameActor(GameActor.Alignment.Mob, "vampire", -1);
         }
         [TestMethod]
         public void ConstructorShouldCreateUniqueName()
         {
-            var actor1 = new GameActor("wolf");
-            var actor2 = new GameActor("wolf");
+            var actor1 = new GameActor(GameActor.Alignment.Mob, "wolf");
+            var actor2 = new GameActor(GameActor.Alignment.Mob, "wolf");
 
             Assert.AreEqual(actor1.name, actor2.name);
             Assert.AreNotEqual(actor1.uniqueName, actor2.uniqueName);
@@ -49,14 +49,14 @@ namespace UnitTest
         [TestMethod]
         public void BigDamageShouldZeroHealth()
         {
-            var actor = new GameActor("doomed", 100);
+            var actor = new GameActor(GameActor.Alignment.Mob, "doomed", 100);
             actor.TakeDamage(1000);
             Assert.AreEqual(actor.Health, 0);
         }
         [TestMethod]
         public void BigHealShouldMaxHealth()
         {
-            var actor = new GameActor("lucky", 100);
+            var actor = new GameActor(GameActor.Alignment.Mob, "lucky", 100);
             actor.TakeDamage(50);
             actor.Heal(1000);
             Assert.AreEqual(actor.Health, actor.baseHealth);
@@ -64,7 +64,7 @@ namespace UnitTest
         [TestMethod]
         public void ActorCanSurviveDamage()
         {
-            var actor = new GameActor("hurt", 100);
+            var actor = new GameActor(GameActor.Alignment.Mob, "hurt", 100);
             actor.TakeDamage(30);
 
             Assert.AreEqual(actor.Health, 70);
@@ -73,7 +73,7 @@ namespace UnitTest
         [TestMethod]
         public void ActorCanDieFromDamage()
         {
-            var actor = new GameActor("why me", 100);
+            var actor = new GameActor(GameActor.Alignment.Mob, "why me", 100);
             actor.TakeDamage(actor.baseHealth);
 
             Assert.IsFalse(actor.Alive);
@@ -82,7 +82,7 @@ namespace UnitTest
         public void DeathShouldFireEvent()
         {
             bool didFire = false;
-            var a = new GameActor("again really?", 100);
+            var a = new GameActor(GameActor.Alignment.Mob, "again really?", 100);
             GameEvents.Instance.Death += deceased =>
             {
                 Assert.AreEqual(a, deceased);

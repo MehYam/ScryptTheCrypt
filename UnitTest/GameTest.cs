@@ -60,52 +60,51 @@ namespace UnitTest
             };
             testData.game.PlayRound();
         }
-        private void TestAddActor(Game.ActorAlignment align)
+        private void TestAddActor(GameActor.Alignment align)
         {
             var game = new Game();
-            var actor1 = new GameActor("one");
-            var actor2 = new GameActor("two");
-            game.AddActor(actor1, align);
-            game.AddActor(actor2, align);
+            var actor1 = new GameActor(align, "one");
+            var actor2 = new GameActor(align, "two");
+            game.AddActor(actor1);
+            game.AddActor(actor2);
 
-            var coll = align == Game.ActorAlignment.Player ? game.Players : game.Mobs;
+            var coll = align == GameActor.Alignment.Player ? game.Players : game.Mobs;
             Assert.AreEqual(coll[0], actor1);
             Assert.AreEqual(coll[1], actor2);
         }
         [TestMethod]
-        public void AddPlayerShouldAddActorsInOrder()
+        public void AddActorShouldAddPlayersInOrderAndInCorrectGroup()
         {
-            TestAddActor(Game.ActorAlignment.Player);
+            TestAddActor(GameActor.Alignment.Player);
         }
         [TestMethod]
-        public void AddMobShouldAddActorsInOrder()
+        public void AddActorShouldAddMobsInOrderAndInCorrectGroup()
         {
-            TestAddActor(Game.ActorAlignment.Mob);
+            TestAddActor(GameActor.Alignment.Mob);
         }
-        private void TestAddActorEvent(Game.ActorAlignment align)
+        private void TestAddActorEvent(GameActor.Alignment align)
         {
             var game = new Game();
             var actor = new GameActor();
             int called = 0;
-            GameEvents.Instance.ActorAdded += (g, a, al) =>
+            GameEvents.Instance.ActorAdded += (g, a) =>
             {
                 ++called;
                 Assert.AreEqual(game, g);
                 Assert.AreEqual(a, actor);
-                Assert.AreEqual(al, align);
             };
-            game.AddActor(actor, align);
+            game.AddActor(actor);
             Assert.AreEqual(1, called);
         }
         [TestMethod]
         public void AddActorShouldFireEvent()
         {
-            TestAddActorEvent(Game.ActorAlignment.Player);
+            TestAddActorEvent(GameActor.Alignment.Player);
         }
         [TestMethod]
         public void AddMobShouldFireEvent()
         {
-            TestAddActorEvent(Game.ActorAlignment.Mob);
+            TestAddActorEvent(GameActor.Alignment.Mob);
         }
         [ExpectedException(typeof(NotSupportedException))]
         [TestMethod]
@@ -125,11 +124,11 @@ namespace UnitTest
             Assert.IsTrue(testData.game.Players.Count > 0);
             Assert.IsTrue(testData.game.Mobs.Count > 0);
 
-            testData.game.ClearActors(Game.ActorAlignment.Mob);
+            testData.game.ClearActors(GameActor.Alignment.Mob);
             Assert.IsTrue(testData.game.Players.Count > 0);
             Assert.AreEqual(0, testData.game.Mobs.Count);
 
-            testData.game.ClearActors(Game.ActorAlignment.Player);
+            testData.game.ClearActors(GameActor.Alignment.Player);
             Assert.AreEqual(0, testData.game.Players.Count);
         }
         [TestMethod]
@@ -282,15 +281,15 @@ namespace UnitTest
         public void EnumerateTurnShouldRunAllActions()
         {
             var game = new Game();
-            var player = new GameActor();
-            var mob = new GameActor();
+            var player = new GameActor(GameActor.Alignment.Player);
+            var mob = new GameActor(GameActor.Alignment.Mob);
 
             var mock1 = new MockAction();
             var mock2 = new MockAction();
             player.AddAction(mock1);
             mob.AddAction(mock2);
-            game.AddActor(player, Game.ActorAlignment.Player);
-            game.AddActor(mob, Game.ActorAlignment.Mob);
+            game.AddActor(player);
+            game.AddActor(mob);
 
             var turns = game.EnumerateRound();
             while(turns.MoveNext());
@@ -347,7 +346,7 @@ namespace UnitTest
             }
             ");
 
-            testGame.AddActor(testActor, Game.ActorAlignment.Player);
+            testGame.AddActor(testActor);
             var rounds = testGame.EnumerateRound_Scrypt();
             while(rounds.MoveNext());
 

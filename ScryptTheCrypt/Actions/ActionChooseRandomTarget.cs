@@ -5,10 +5,10 @@ namespace ScryptTheCrypt.Actions
 {
     public sealed class ActionChooseRandomTarget : IActorAction
     {
-        readonly Game.ActorAlignment targetAlignment;
-        public ActionChooseRandomTarget(Game.ActorAlignment targetAlignment)
+        readonly GameActor.Alignment targetAlign;
+        public ActionChooseRandomTarget(GameActor.Alignment targetAlign)
         {
-            this.targetAlignment = targetAlignment;
+            this.targetAlign = targetAlign;
         }
         public void act(Game g, GameActor actor)
         {
@@ -27,12 +27,12 @@ namespace ScryptTheCrypt.Actions
                 return nondead.Count > 0 ? nondead[g.rng.NextIndex(nondead)] : null;
             }
             GameActor target = null;
-            switch(targetAlignment)
+            switch(targetAlign)
             {
-                case Game.ActorAlignment.Mob:
+                case GameActor.Alignment.Mob:
                     target = selectLiving(g.Mobs);
                     break;
-                case Game.ActorAlignment.Player:
+                case GameActor.Alignment.Player:
                     target = selectLiving(g.Players);
                     break;
             }

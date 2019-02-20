@@ -57,7 +57,7 @@ namespace ManualTests
                 var retval = generators[rng.NextIndex(generators)]();
                 if (addDefaultAttack)
                 {
-                    retval.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
+                    retval.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Player));
                     retval.AddAction(new ActionAttack());
                 }
                 return retval;
@@ -75,25 +75,25 @@ namespace ManualTests
             var rng = new RNG(seed);
             var mobGen = new GameMobGenerator(
                 rng,
-                () => new GameActor("rat", 10, new GameWeapon("teeth", 4)),
-                () => new GameActor("mole", 8, new GameWeapon("claw", 6)),
-                () => new GameActor("lynx", 15, new GameWeapon("pounce", 10))
+                () => new GameActor(GameActor.Alignment.Mob, "rat", 10, new GameWeapon("teeth", 4)),
+                () => new GameActor(GameActor.Alignment.Mob, "mole", 8, new GameWeapon("claw", 6)),
+                () => new GameActor(GameActor.Alignment.Mob, "lynx", 15, new GameWeapon("pounce", 10))
             );
             RunGame(CreateSampleGame2(rng), mobGen);
         }
         static Game CreateSampleGame1(int seed)
         {
             var game = new Game(seed);
-            var player = new GameActor("alice");
-            var player2 = new GameActor("bob");
-            var mob = new GameActor("carly");
-            var mob2 = new GameActor("denise");
+            var player = new GameActor(GameActor.Alignment.Player, "alice");
+            var player2 = new GameActor(GameActor.Alignment.Player, "bob");
+            var mob = new GameActor(GameActor.Alignment.Mob, "carly");
+            var mob2 = new GameActor(GameActor.Alignment.Mob, "denise");
 
             // set targeting and affinities
-            player.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
-            player2.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
-            mob.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
-            mob2.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Player));
+            player.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Mob));
+            player2.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Mob));
+            mob.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Player));
+            mob2.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Player));
 
             player.AddAction(new ActionAttack());
             player2.AddAction(new ActionAttack());
@@ -105,10 +105,10 @@ namespace ManualTests
             mob.Weapon = new GameWeapon("carly's cutlass", 33);
             mob2.Weapon = new GameWeapon("denise's dog", 5);
 
-            game.AddActor(player, Game.ActorAlignment.Player);
-            game.AddActor(player2, Game.ActorAlignment.Player);
-            game.AddActor(mob, Game.ActorAlignment.Mob);
-            game.AddActor(mob2, Game.ActorAlignment.Mob);
+            game.AddActor(player);
+            game.AddActor(player2);
+            game.AddActor(mob);
+            game.AddActor(mob2);
             return game;
         }
         static Game CreateSampleGame2(RNG rng)
@@ -116,24 +116,24 @@ namespace ManualTests
             var game = new Game(rng);
             GameActor CreatePlayer(string name, string weaponName, int weaponDmg)
             {
-                var retval = new GameActor(name, 10) {
+                var retval = new GameActor(GameActor.Alignment.Player, name, 10) {
                     Weapon = new GameWeapon(weaponName, weaponDmg)
                 };
-                retval.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
+                retval.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Mob));
                 retval.AddAction(new ActionAttack());
                 return retval;
             }
-            game.AddActor(CreatePlayer("Andrew", "ahlspiess", 4), Game.ActorAlignment.Player);
-            game.AddActor(CreatePlayer("Beatrice", "bow", 5), Game.ActorAlignment.Player);
-            game.AddActor(CreatePlayer("Candy", "cutlass", 6), Game.ActorAlignment.Player);
-            game.AddActor(CreatePlayer("Dierdre", "dagger", 3), Game.ActorAlignment.Player);
+            game.AddActor(CreatePlayer("Andrew", "ahlspiess", 4));
+            game.AddActor(CreatePlayer("Beatrice", "bow", 5));
+            game.AddActor(CreatePlayer("Candy", "cutlass", 6));
+            game.AddActor(CreatePlayer("Dierdre", "dagger", 3));
             return game;
         }
         static void RunGame(Game game, GameMobGenerator mobGen)
         {
-            GameEvents.Instance.ActorAdded += (g, a, align) =>
+            GameEvents.Instance.ActorAdded += (g, a) =>
             {
-                Console.WriteLine($"ActorAdded: {align}, {a}");
+                Console.WriteLine($"ActorAdded: {a}");
             };
             GameEvents.Instance.RoundStart += g =>
             {
@@ -184,10 +184,10 @@ namespace ManualTests
                 if (mobGen != null)
                 {
                     Console.WriteLine("Generating mobs");
-                    game.ClearActors(Game.ActorAlignment.Mob);
+                    game.ClearActors(GameActor.Alignment.Mob);
                     for (int i = 0; i < 4; ++i)
                     {
-                        game.AddActor(mobGen.Gen(true), Game.ActorAlignment.Mob);
+                        game.AddActor(mobGen.Gen(true));
                     }
                 }
                 while (game.GameProgress == Game.Progress.InProgress)
@@ -217,31 +217,33 @@ namespace ManualTests
             var rng = new RNG(seed);
             var mobGen = new GameMobGenerator(
                 rng,
-                () => new GameActor("rat", 10, new GameWeapon("teeth", 4)),
-                () => new GameActor("mole", 8, new GameWeapon("claw", 6)),
-                () => new GameActor("lynx", 15, new GameWeapon("pounce", 10))
+                () => new GameActor(GameActor.Alignment.Mob, "rat", 10, new GameWeapon("teeth", 4)),
+                () => new GameActor(GameActor.Alignment.Mob, "mole", 8, new GameWeapon("claw", 6)),
+                () => new GameActor(GameActor.Alignment.Mob, "lynx", 15, new GameWeapon("pounce", 10))
             );
             RunGame_Scrypt(CreateSampleGame2(rng), mobGen);
         }
+        static void AddDefaultAttack(GameActor a)
+        {
+            var script = new StringBuilder();
+            script.AppendLine(ScryptUtil.chooseRandom.body);
+            script.AppendLine(ScryptUtil.attackTarget.body);
+            script.AppendLine(@"
+            function actorActions(g, a) {
+                var choice = chooseRandom(g.Players, g.rng);
+                if (choice) {
+                    a.Target = choice;
+                }
+                attackTarget(g, a);
+            }
+            ");
+            a.SetScrypt(script.ToString());
+        }
         static void RunGame_Scrypt(Game game, GameMobGenerator mobGen)
         {
-            GameEvents.Instance.ActorAdded += (g, a, align) =>
+            GameEvents.Instance.ActorAdded += (g, a) =>
             {
-                Console.WriteLine($"ActorAdded: {align}, {a}");
-
-                var script = new StringBuilder();
-                script.AppendLine(ScryptUtil.chooseRandom.body);
-                script.AppendLine(ScryptUtil.attackTarget.body);
-                script.AppendLine(@"
-                function actorActions(g, a) {
-                    var choice = chooseRandom(g.Players, g.rng);
-                    if (choice) {
-                        a.Target = choice;
-                    }
-                    attackTarget(g, a);
-                }
-                ");
-                a.SetScrypt(script.ToString());
+                Console.WriteLine($"ActorAdded: {a}");
             };
             GameEvents.Instance.RoundStart += g =>
             {
@@ -292,10 +294,10 @@ namespace ManualTests
                 if (mobGen != null)
                 {
                     Console.WriteLine("Generating mobs");
-                    game.ClearActors(Game.ActorAlignment.Mob);
+                    game.ClearActors(GameActor.Alignment.Mob);
                     for (int i = 0; i < 4; ++i)
                     {
-                        game.AddActor(mobGen.Gen(true), Game.ActorAlignment.Mob);
+                        game.AddActor(mobGen.Gen(true));
                     }
                 }
                 while (game.GameProgress == Game.Progress.InProgress)

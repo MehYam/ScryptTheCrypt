@@ -7,7 +7,6 @@ namespace ScryptTheCrypt
 {
     public sealed class Game
     {
-        public enum ActorAlignment { Player, Mob };
         public enum Progress { InProgress, PlayersWin, MobsWin, Draw };
 
         public int NumRounds { get; private set; }
@@ -42,16 +41,16 @@ namespace ScryptTheCrypt
 
         public IList<GameActor> Players { get { return players.AsReadOnly(); } }
         public IList<GameActor> Mobs { get { return mobs.AsReadOnly(); } }
-        public void ClearActors(ActorAlignment align)
+        public void ClearActors(GameActor.Alignment align)
         {
-            var actors = align == ActorAlignment.Player ? players : mobs;
+            var actors = align == GameActor.Alignment.Player ? players : mobs;
             actors.Clear();
         }
-        public void AddActor(GameActor actor, ActorAlignment align)
+        public void AddActor(GameActor actor)
         {
-            var actors = align == ActorAlignment.Player ? players : mobs;
+            var actors = actor.align == GameActor.Alignment.Player ? players : mobs;
             actors.Add(actor);
-            GameEvents.Instance.ActorAdded_Fire(this, actor, align);
+            GameEvents.Instance.ActorAdded_Fire(this, actor);
         }
         public void PlayRound()
         {

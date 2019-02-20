@@ -8,9 +8,11 @@ namespace ScryptTheCrypt
 {
     public sealed class GameActor
     {
+        public enum Alignment { Player, Mob };
         static private int s_instance = 0;
 
         public readonly int id;
+        public readonly Alignment align;
         public readonly string name;
         public readonly string uniqueName; // for convenience
         public readonly float baseHealth;
@@ -62,19 +64,20 @@ namespace ScryptTheCrypt
         public bool Frozen { get; set; }
         public bool Sleeping { get; set; }
 
-        public GameActor(string name = "anon", float baseHealth = 100)
+        public GameActor(Alignment align = Alignment.Player, string name = "anon", float baseHealth = 100)
         {
             id = ++s_instance;
             if (baseHealth <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(baseHealth), "baseHealth must be greater than zero");
             }
+            this.align = align;
             this.name = name;
             this.uniqueName = $"{name}:{id.ToString("D4")}";
             this.baseHealth = baseHealth;
             _health = baseHealth;
         }
-        public GameActor(string name, float baseHealth, GameWeapon weapon) : this(name, baseHealth)
+        public GameActor(Alignment align, string name, float baseHealth, GameWeapon weapon) : this(align, name, baseHealth)
         {
             this.Weapon = weapon;
         }
@@ -87,7 +90,7 @@ namespace ScryptTheCrypt
             var sb = new System.Text.StringBuilder();
             sb.Append($" target: {(Target != null ? Target.uniqueName : "none")} frozen: {Frozen} sleeping: {Sleeping} ");
             var weaponText = Weapon != null ? Weapon.ToString() : "none";
-            return $"GameActor '{name}':{id.ToString("D4")}, health {Health}/{baseHealth}, weapon {weaponText}, attrs {sb}";
+            return $"GameActor '{uniqueName}', health {Health}/{baseHealth}, weapon {weaponText}, {align}, attrs {sb}";
         }
         public void TakeDamage(float d)
         {

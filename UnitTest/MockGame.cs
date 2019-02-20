@@ -23,10 +23,10 @@ namespace UnitTest
     class TestGameWithActors
     {
         public Game game;
-        public GameActor playerAlice = new GameActor("alice");
-        public GameActor playerBob = new GameActor("bob");
-        public GameActor mobCarly = new GameActor("carly");
-        public GameActor mobDenise = new GameActor("denise");
+        public GameActor playerAlice = new GameActor(GameActor.Alignment.Player, "alice");
+        public GameActor playerBob = new GameActor(GameActor.Alignment.Player, "bob");
+        public GameActor mobCarly = new GameActor(GameActor.Alignment.Mob, "carly");
+        public GameActor mobDenise = new GameActor(GameActor.Alignment.Mob, "denise");
         public MockAction playerMockAction = new MockAction();
         public MockAction mobMockAction = new MockAction();
         public TestGameWithActors(int seed = 2112)
@@ -36,10 +36,10 @@ namespace UnitTest
             playerAlice.AddAction(playerMockAction);
             mobCarly.AddAction(mobMockAction);
 
-            game.AddActor(playerAlice, Game.ActorAlignment.Player);
-            game.AddActor(playerBob, Game.ActorAlignment.Player);
-            game.AddActor(mobCarly, Game.ActorAlignment.Mob);
-            game.AddActor(mobDenise, Game.ActorAlignment.Mob);
+            game.AddActor(playerAlice);
+            game.AddActor(playerBob);
+            game.AddActor(mobCarly);
+            game.AddActor(mobDenise);
         }
         public void ArmAlice(float damage = 20)
         {
@@ -47,7 +47,7 @@ namespace UnitTest
         }
         public void AddChooseTargetToPlayer()
         {
-            playerAlice.AddAction(new ActionChooseRandomTarget(Game.ActorAlignment.Mob));
+            playerAlice.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Mob));
         }
         public void AddTargetAndAttackToPlayer()
         {
