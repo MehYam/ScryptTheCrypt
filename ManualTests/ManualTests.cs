@@ -41,27 +41,7 @@ namespace ManualTests
             {
                 seed = 2112;
             }
-            RunGame(CreateSampleGame1(seed), null);
-        }
-        class GameMobGenerator
-        {
-            private readonly Func<GameActor>[] generators;
-            private readonly RNG rng;
-            public GameMobGenerator(RNG rng, params Func<GameActor>[] generators)
-            {
-                this.rng = rng;
-                this.generators = generators;
-            }
-            public GameActor Gen(bool addDefaultAttack)
-            {
-                var retval = generators[rng.NextIndex(generators)]();
-                if (addDefaultAttack)
-                {
-                    retval.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Player));
-                    retval.AddAction(new ActionAttack());
-                }
-                return retval;
-            }
+            RunGame(CreateSampleGame1(seed), null, GameMobGenerator.ActionType.IAction);
         }
         static void RunSampleGame2()
         {
@@ -79,7 +59,51 @@ namespace ManualTests
                 () => new GameActor(GameActor.Alignment.Mob, "mole", 8, new GameWeapon("claw", 6)),
                 () => new GameActor(GameActor.Alignment.Mob, "lynx", 15, new GameWeapon("pounce", 10))
             );
-            RunGame(CreateSampleGame2(rng), mobGen);
+            RunGame(CreateSampleGame2(rng), mobGen, GameMobGenerator.ActionType.IAction);
+        }
+        static void RunSampleGame_Scrypt()
+        {
+            Console.WriteLine("input a seed (2112): ");
+            var strSeed = Console.ReadLine();
+            if (!int.TryParse(strSeed, out int seed))
+            {
+                seed = 2112;
+            }
+
+            var rng = new RNG(seed);
+            var mobGen = new GameMobGenerator(
+                rng,
+                () => new GameActor(GameActor.Alignment.Mob, "rat", 10, new GameWeapon("teeth", 4)),
+                () => new GameActor(GameActor.Alignment.Mob, "mole", 8, new GameWeapon("claw", 6)),
+                () => new GameActor(GameActor.Alignment.Mob, "lynx", 15, new GameWeapon("pounce", 10))
+            );
+            RunGame(CreateSampleGame2(rng), mobGen, GameMobGenerator.ActionType.Scrypt);
+        }
+        class GameMobGenerator
+        {
+            private readonly Func<GameActor>[] generators;
+            private readonly RNG rng;
+            public GameMobGenerator(RNG rng, params Func<GameActor>[] generators)
+            {
+                this.rng = rng;
+                this.generators = generators;
+            }
+            public enum ActionType { None, IAction, Scrypt };
+            public GameActor Gen(ActionType t)
+            {
+                var mob = generators[rng.NextIndex(generators)]();
+                switch(t)
+                {
+                    case ActionType.IAction:
+                        mob.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Player));
+                        mob.AddAction(new ActionAttack());
+                        break;
+                    case ActionType.Scrypt:
+                        mob.SetScrypt(ScryptUtil.defaultAttack);
+                        break;
+                }
+                return mob;
+            }
         }
         static Game CreateSampleGame1(int seed)
         {
@@ -116,12 +140,13 @@ namespace ManualTests
             var game = new Game(rng);
             GameActor CreatePlayer(string name, string weaponName, int weaponDmg)
             {
-                var retval = new GameActor(GameActor.Alignment.Player, name, 10) {
+                var player = new GameActor(GameActor.Alignment.Player, name, 10) {
                     Weapon = new GameWeapon(weaponName, weaponDmg)
                 };
-                retval.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Mob));
-                retval.AddAction(new ActionAttack());
-                return retval;
+                player.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Mob));
+                player.AddAction(new ActionAttack());
+                player.SetScrypt(ScryptUtil.defaultAttack);
+                return player;
             }
             game.AddActor(CreatePlayer("Andrew", "ahlspiess", 4));
             game.AddActor(CreatePlayer("Beatrice", "bow", 5));
@@ -129,7 +154,7 @@ namespace ManualTests
             game.AddActor(CreatePlayer("Dierdre", "dagger", 3));
             return game;
         }
-        static void RunGame(Game game, GameMobGenerator mobGen)
+        static void RunGame(Game game, GameMobGenerator mobGen, GameMobGenerator.ActionType actionType)
         {
             GameEvents.Instance.ActorAdded += (g, a) =>
             {
@@ -187,7 +212,7 @@ namespace ManualTests
                     game.ClearActors(GameActor.Alignment.Mob);
                     for (int i = 0; i < 4; ++i)
                     {
-                        game.AddActor(mobGen.Gen(true));
+                        game.AddActor(mobGen.Gen(actionType));
                     }
                 }
                 while (game.GameProgress == Game.Progress.InProgress)
@@ -196,118 +221,15 @@ namespace ManualTests
                     Console.WriteLine("Any key to continue...");
                     Console.ReadKey();
 
-                    game.PlayRound();
-
-                    Console.WriteLine($"Round ended with result {game.GameProgress}");
-                    Console.ReadKey();
-                }
-            }
-            Console.WriteLine($"Game ended with result {game.GameProgress}");
-            GameEvents.ReleaseAllListeners();
-        }
-        static void RunSampleGame_Scrypt()
-        {
-            Console.WriteLine("input a seed (2112): ");
-            var strSeed = Console.ReadLine();
-            if (!int.TryParse(strSeed, out int seed))
-            {
-                seed = 2112;
-            }
-
-            var rng = new RNG(seed);
-            var mobGen = new GameMobGenerator(
-                rng,
-                () => new GameActor(GameActor.Alignment.Mob, "rat", 10, new GameWeapon("teeth", 4)),
-                () => new GameActor(GameActor.Alignment.Mob, "mole", 8, new GameWeapon("claw", 6)),
-                () => new GameActor(GameActor.Alignment.Mob, "lynx", 15, new GameWeapon("pounce", 10))
-            );
-            RunGame_Scrypt(CreateSampleGame2(rng), mobGen);
-        }
-        static void AddDefaultAttack(GameActor a)
-        {
-            var script = new StringBuilder();
-            script.AppendLine(ScryptUtil.chooseRandom.body);
-            script.AppendLine(ScryptUtil.attackTarget.body);
-            script.AppendLine(@"
-            function actorActions(g, a) {
-                var choice = chooseRandom(g.Players, g.rng);
-                if (choice) {
-                    a.Target = choice;
-                }
-                attackTarget(g, a);
-            }
-            ");
-            a.SetScrypt(script.ToString());
-        }
-        static void RunGame_Scrypt(Game game, GameMobGenerator mobGen)
-        {
-            GameEvents.Instance.ActorAdded += (g, a) =>
-            {
-                Console.WriteLine($"ActorAdded: {a}");
-            };
-            GameEvents.Instance.RoundStart += g =>
-            {
-                Console.WriteLine("RoundStart");
-                Console.ReadKey();
-            };
-            GameEvents.Instance.RoundEnd += g =>
-            {
-                Console.WriteLine("RoundEnd");
-                Console.ReadKey();
-            };
-            GameEvents.Instance.AttackStart += (a, b) =>
-            {
-                Console.WriteLine($"{a.uniqueName} attacking {b.uniqueName} with {a.Weapon}");
-                Console.ReadKey();
-            };
-            GameEvents.Instance.ActorHealthChange += (a, o, n) =>
-            {
-                Console.WriteLine($"{a.uniqueName} health {o} => {n}");
-                Console.ReadKey();
-            };
-            GameEvents.Instance.Death += a =>
-            {
-                Console.WriteLine($"=-=-=RIP=-=-= {a.uniqueName}");
-                Console.ReadKey();
-            };
-            if (verbose)
-            {
-                GameEvents.Instance.ActorActionsStart += (g, a) =>
-                {
-                    Console.WriteLine($"{a.uniqueName} starting turn");
-                    Console.ReadKey();
-                };
-                GameEvents.Instance.ActorActionsEnd += (g, a) =>
-                {
-                    Console.WriteLine($"{a.uniqueName} ending turn");
-                    Console.ReadKey();
-                };
-                GameEvents.Instance.AttackEnd += (a, b) =>
-                {
-                    Console.WriteLine($"attack finished, target {b.uniqueName} health {b.Health}/{b.baseHealth}");
-                    Console.ReadKey();
-                };
-            }
-
-            while (game.GameProgress != Game.Progress.MobsWin)
-            {
-                if (mobGen != null)
-                {
-                    Console.WriteLine("Generating mobs");
-                    game.ClearActors(GameActor.Alignment.Mob);
-                    for (int i = 0; i < 4; ++i)
+                    switch(actionType)
                     {
-                        game.AddActor(mobGen.Gen(true));
+                        case GameMobGenerator.ActionType.IAction:
+                            game.PlayRound();
+                            break;
+                        case GameMobGenerator.ActionType.Scrypt:
+                            game.PlayRound_Scrypt();
+                            break;
                     }
-                }
-                while (game.GameProgress == Game.Progress.InProgress)
-                {
-                    Console.WriteLine(game.ToString());
-                    Console.WriteLine("Any key to continue...");
-                    Console.ReadKey();
-
-                    var scrypts = game.EnumerateRound_Scrypt();
-                    while (scrypts.MoveNext());
 
                     Console.WriteLine($"Round ended with result {game.GameProgress}");
                     Console.ReadKey();
