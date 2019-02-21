@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace ScryptTheCrypt
@@ -42,11 +41,29 @@ namespace ScryptTheCrypt
         public static JSFunction attackTarget = new JSFunction(
             "attackTarget",
             @"function {0}(game, actor) {{
-                if (actor.target) {{
-                    actor.Attack(actor.target);
-                    actor.target = null;
+                if (actor.Target) {{
+                    actor.Attack(actor.Target);
+                    actor.Target = null;
                 }}
             }}"
         );
+        public static readonly string defaultAttack;
+        static ScryptUtil()
+        {
+            var script = new StringBuilder();
+            script.AppendLine(ScryptUtil.chooseRandom.body);
+            script.AppendLine(ScryptUtil.attackTarget.body);
+            script.AppendLine(@"
+            function actorActions(g, a) {
+                var enemies = a.align == Alignment_Mob ? g.Players : g.Mobs;
+                var choice = chooseRandom(enemies, g.rng);
+                if (choice) {
+                    a.Target = choice;
+                }
+                attackTarget(g, a);
+            }
+            ");
+            defaultAttack = script.ToString();
+        }
     }
 }

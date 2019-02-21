@@ -334,8 +334,7 @@ namespace UnitTest
             script.Invoke("accessGame", testGame);
             Assert.AreEqual(1, testGame.NumRounds);
         }
-        [TestMethod]
-        public void EnumerateRound_ScryptShouldRunActorScrypts()
+        static private Game CreateTestGameWithScrypt()
         {
             var testGame = new Game();
             var testActor = new GameActor();
@@ -347,9 +346,25 @@ namespace UnitTest
             ");
 
             testGame.AddActor(testActor);
+            return testGame;
+        }
+        [TestMethod]
+        public void EnumerateRound_ScryptShouldRunActorScrypts()
+        {
+            var testGame = CreateTestGameWithScrypt();
             var rounds = testGame.EnumerateRound_Scrypt();
             while(rounds.MoveNext());
 
+            var testActor = testGame.Players[0];
+            Assert.AreEqual(testActor.baseHealth - 5, testActor.Health);
+        }
+        [TestMethod]
+        public void PlayRound_ScryptShouldRunActorScrypts()
+        {
+            var testGame = CreateTestGameWithScrypt();
+            testGame.PlayRound_Scrypt();
+
+            var testActor = testGame.Players[0];
             Assert.AreEqual(testActor.baseHealth - 5, testActor.Health);
         }
     }

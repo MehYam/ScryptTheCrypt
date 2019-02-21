@@ -82,5 +82,17 @@ namespace UnitTest
 
             Assert.IsNull(test.playerAlice.Target);
         }
+        [TestMethod]
+        public void DefaultAttackScryptShouldAttack()
+        {
+            var test = new TestGameWithActors();
+            test.ArmAlice();
+
+            test.playerAlice.SetScrypt(ScryptUtil.defaultAttack);
+            test.playerAlice.SetScryptLogger(new Action<string>(s => { Console.WriteLine($"scrypt log: {s}"); } ));
+            test.game.PlayRound_Scrypt();
+
+            Assert.AreNotEqual(0, test.game.Mobs.Where(a => a.Health < a.baseHealth).Count());
+        }
     }
 }

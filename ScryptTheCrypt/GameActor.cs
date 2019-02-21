@@ -139,7 +139,13 @@ namespace ScryptTheCrypt
         public void SetScrypt(string js)
         {
             jint = new Jint.Engine();
+            jint.SetValue("Alignment_Mob", Alignment.Mob);
+            jint.SetValue("Alignment_Player", Alignment.Player);
             jint.Execute(js);
+        }
+        public void SetScryptLogger(Delegate logger)
+        {
+            jint.SetValue("log", logger);
         }
         public void RunScrypt(Game g)
         {

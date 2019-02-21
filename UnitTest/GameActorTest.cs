@@ -212,7 +212,7 @@ namespace UnitTest
             actor.SetScrypt("ur_nofun()");
         }
         [TestMethod]
-        public void RunScryptCanAccessGameActor()
+        public void ScryptCanAccessGameActor()
         {
             var testGame = new Game();
             var testActor = new GameActor();
@@ -226,6 +226,16 @@ namespace UnitTest
             testActor.RunScrypt(testGame);
 
             Assert.AreEqual(testActor.baseHealth - 5, testActor.Health);
+        }
+        [TestMethod]
+        public void ScryptCanAccessAlignmentEnum()
+        {
+            var testActor = new GameActor();
+            testActor.SetScrypt(@"
+                if (Alignment_Mob == undefined || Alignment_Player == undefined) {
+                    throw 'GameActor enums do not exist?';
+                }
+            ");
         }
         [TestMethod]
         public void DamageShouldFireHealthChangeEvent()
