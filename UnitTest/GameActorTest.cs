@@ -153,6 +153,27 @@ namespace UnitTest
             Assert.AreEqual(2, progress);
         }
         [TestMethod]
+        public void SettingTargetShouldFireEvent()
+        {
+            var actor = new GameActor();
+            var target = new GameActor();
+
+            GameActor eventedTarget = null;
+            GameEvents.Instance.TargetSelected += a =>
+            {
+                eventedTarget = a.Target;
+            };
+
+            actor.Target = target;
+
+            Assert.AreEqual(target, eventedTarget);
+
+            actor.Target = null;
+
+            Assert.AreEqual(null, eventedTarget);
+        }
+
+        [TestMethod]
         public void DoActionsShouldFireActorActionsEvents()
         {
             GameActor currentActor = null;

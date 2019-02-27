@@ -55,10 +55,7 @@ namespace ScryptTheCrypt
             set
             {
                 _target = value;
-                if (_target != null)
-                {
-                    GameEvents.Instance.TargetSelected_Fire(this);
-                }
+                GameEvents.Instance.TargetSelected_Fire(this);
             }
         }
         public bool Frozen { get; set; }
