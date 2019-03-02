@@ -254,6 +254,27 @@ namespace UnitTest
             Assert.IsTrue(fired);
             Assert.IsNull(currentActor);
         }
+        [TestMethod]
+        public void GetTargetsShouldReturnTargetedActors()
+        {
+            GameActor actor1 = new GameActor();
+            GameActor actor2 = new GameActor();
+            GameActor actor3 = new GameActor();
+
+            actor1.Targeted = true;
+            actor2.Targeted = true;
+
+            var game = new Game();
+            game.AddActor(actor1);
+            game.AddActor(actor2);
+            game.AddActor(actor3);
+
+            var targets = game.GetTargets();
+
+            Assert.AreEqual(2, targets.Count);
+            Assert.IsTrue(targets.Contains(actor1));
+            Assert.IsTrue(targets.Contains(actor2));
+        }
         // KAI: we're mixing unit and integration tests, look into how to manage that
         [TestMethod]
         public void DoRoundShouldFireAttackEvents()
@@ -273,7 +294,7 @@ namespace UnitTest
                 endFired = true;
             };
             testData.ArmAlice();
-            testData.AddTargetAndAttackToPlayer();
+            testData.AggroAliceAndTargetCarly();
             testData.game.PlayRound();
 
             Assert.IsTrue(startFired);
@@ -289,7 +310,7 @@ namespace UnitTest
                 Assert.AreEqual(a, testData.mobCarly);
             };
             testData.ArmAlice(testData.mobCarly.baseHealth);
-            testData.AddTargetAndAttackToPlayer();
+            testData.AggroAliceAndTargetCarly();
             testData.game.PlayRound();
             Assert.IsTrue(fired);
             Assert.IsFalse(testData.mobCarly.Alive);
@@ -298,7 +319,7 @@ namespace UnitTest
         public void DoRoundShouldFireTargetEvents()
         {
             bool fired = false;
-            GameEvents.Instance.TargetSelected += a =>
+            GameEvents.Instance.ActorTargetedChange += a =>
             {
                 fired = true;
             };

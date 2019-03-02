@@ -60,12 +60,12 @@ namespace UnitTest
         public void AttackTargetShouldDealDamage()
         {
             var test = new TestGameWithActors();
-            test.playerAlice.Target = test.mobCarly;
             test.ArmAlice();
+            test.mobCarly.Targeted = true;
 
             var jint = new Jint.Engine();
-            jint.Execute(ScryptUtil.attackTarget.body);
-            jint.Invoke(ScryptUtil.attackTarget.name, test.game, test.playerAlice);
+            jint.Execute(ScryptUtil.attackTargets.body);
+            jint.Invoke(ScryptUtil.attackTargets.name, test.game, test.playerAlice);
 
             Assert.AreEqual(test.mobCarly.Health, test.mobCarly.baseHealth - test.playerAlice.Weapon.damage);
         }
@@ -73,14 +73,14 @@ namespace UnitTest
         public void AttackTargetShouldClearTargetAfterAttack()
         {
             var test = new TestGameWithActors();
-            test.playerAlice.Target = test.mobCarly;
             test.ArmAlice();
+            test.AggroAliceAndTargetCarly();
 
             var jint = new Jint.Engine();
-            jint.Execute(ScryptUtil.attackTarget.body);
-            jint.Invoke(ScryptUtil.attackTarget.name, test.game, test.playerAlice);
+            jint.Execute(ScryptUtil.attackTargets.body);
+            jint.Invoke(ScryptUtil.attackTargets.name, test.game, test.playerAlice);
 
-            Assert.IsNull(test.playerAlice.Target);
+            Assert.IsFalse(test.mobCarly.Targeted);
         }
         [TestMethod]
         public void DefaultAttackScryptShouldAttack()

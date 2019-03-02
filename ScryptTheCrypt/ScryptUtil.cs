@@ -38,12 +38,13 @@ namespace ScryptTheCrypt
                 return living[ rng.Next(0, living.length - 1) ];
             }}"
         );
-        public static JSFunction attackTarget = new JSFunction(
-            "attackTarget",
+        public static JSFunction attackTargets = new JSFunction(
+            "attackTargets",
             @"function {0}(game, actor) {{
-                if (actor.Target) {{
-                    actor.Attack(actor.Target);
-                    actor.Target = null;
+                var targets = game.GetTargets();
+                for (var i = 0; i < targets.Count; ++i) {{
+                    actor.Attack(targets[i]);
+                    targets[i].Targeted = false;
                 }}
             }}"
         );
@@ -52,15 +53,15 @@ namespace ScryptTheCrypt
         {
             var script = new StringBuilder();
             script.AppendLine(ScryptUtil.chooseRandom.body);
-            script.AppendLine(ScryptUtil.attackTarget.body);
+            script.AppendLine(ScryptUtil.attackTargets.body);
             script.AppendLine(@"
             function actorActions(g, a) {
                 var enemies = a.align == Alignment_Mob ? g.Players : g.Mobs;
                 var choice = chooseRandom(enemies, g.rng);
                 if (choice) {
-                    a.Target = choice;
+                    choice.Targeted = true;
                 }
-                attackTarget(g, a);
+                attackTargets(g, a);
             }
             ");
             defaultAttack = script.ToString();

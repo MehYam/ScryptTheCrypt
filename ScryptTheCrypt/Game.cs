@@ -58,6 +58,13 @@ namespace ScryptTheCrypt
                 GameEvents.Instance.ActorRemoved_Fire(this, actor);
             }
         }
+        public List<GameActor> GetTargets()
+        {
+            var targets = new List<GameActor>();
+            targets.AddRange(players.FindAll(actor => actor.Targeted));
+            targets.AddRange(mobs.FindAll(actor => actor.Targeted));
+            return targets;
+        }
         public void PlayRound()
         {
             ++NumRounds;

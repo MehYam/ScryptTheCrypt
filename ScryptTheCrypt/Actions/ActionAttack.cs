@@ -16,9 +16,10 @@ namespace ScryptTheCrypt.Actions
             {
                 throw new ArgumentNullException(nameof(actor));
             }
-            if (actor.Target != null)
+            //KAI: will currently flunk test - call g.GetTargets, iterate them, attack for each one
+            foreach (var target in g.GetTargets())
             {
-                actor.Attack(actor.Target);
+                actor.Attack(target);
             }
         }
     }

@@ -49,10 +49,10 @@ namespace UnitTest
         {
             playerAlice.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Mob));
         }
-        public void AddTargetAndAttackToPlayer()
+        public void AggroAliceAndTargetCarly()
         {
-            playerAlice.Target = mobCarly;
             playerAlice.AddAction(new ActionAttack());
+            mobCarly.Targeted = true;
         }
         public void KillPlayers()
         {

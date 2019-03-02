@@ -22,8 +22,9 @@ namespace UnitTest.Actions
             testGame.playerAlice.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Player));
             testGame.game.PlayRound();
 
-            Assert.IsNotNull(testGame.playerAlice.Target);
-            Assert.IsTrue(testGame.game.Players.Contains(testGame.playerAlice.Target));
+            var targets = testGame.game.GetTargets();
+            Assert.AreEqual(1, targets.Count);
+            Assert.IsTrue(targets[0].align == GameActor.Alignment.Player);
         }
         [TestMethod]
         public void PseudoRandomMobTargetShouldBeChosen()
@@ -33,8 +34,9 @@ namespace UnitTest.Actions
             testGame.playerAlice.AddAction(new ActionChooseRandomTarget(GameActor.Alignment.Mob));
             testGame.game.PlayRound();
 
-            Assert.IsNotNull(testGame.playerAlice.Target);
-            Assert.IsTrue(testGame.game.Mobs.Contains(testGame.playerAlice.Target));
+            var targets = testGame.game.GetTargets();
+            Assert.AreEqual(1, targets.Count);
+            Assert.IsTrue(targets[0].align == GameActor.Alignment.Mob);
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -65,7 +67,7 @@ namespace UnitTest.Actions
             game.AddActor(chooser);
             action.act(game, chooser);
 
-            Assert.IsNull(chooser.Target);
+            Assert.AreEqual(0, game.GetTargets().Count);
         }
     }
 }

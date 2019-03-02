@@ -36,8 +36,10 @@ namespace ScryptTheCrypt.Actions
                     target = selectLiving(g.Players);
                     break;
             }
-
-            actor.Target = target;
+            if (target != null)
+            {
+                target.Targeted = true;
+            }
         }
     }
 }

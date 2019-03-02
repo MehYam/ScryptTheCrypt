@@ -44,18 +44,14 @@ namespace ScryptTheCrypt
         public GameWeapon Weapon { get; set; }
         public bool Alive { get { return Health > 0; } }
 
-        // other secondary attributes - originally this was implemented as a dictionary, leaning towards
-        // allowing clients of GameActor to associate whatever attributes they wanted with actors.  While
-        // that would still be cool, for now we're just pounding them out as primitive types, since that
-        // works a little easier with lua.
-        private GameActor _target;
-        public GameActor Target
+        private bool _targeted;
+        public bool Targeted
         {
-            get { return _target; }
+            get { return _targeted; }
             set
             {
-                _target = value;
-                GameEvents.Instance.TargetSelected_Fire(this);
+                _targeted = value;
+                GameEvents.Instance.ActorTargetedChange_Fire(this);
             }
         }
         public bool Frozen { get; set; }
@@ -85,7 +81,7 @@ namespace ScryptTheCrypt
         public override string ToString()
         {
             var sb = new System.Text.StringBuilder();
-            sb.Append($" target: {(Target != null ? Target.uniqueName : "none")} frozen: {Frozen} sleeping: {Sleeping} ");
+            sb.Append($" targeted: {Targeted} frozen: {Frozen} sleeping: {Sleeping} ");
             var weaponText = Weapon != null ? Weapon.ToString() : "none";
             return $"GameActor '{uniqueName}', health {Health}/{baseHealth}, weapon {weaponText}, {align}, attrs {sb}";
         }

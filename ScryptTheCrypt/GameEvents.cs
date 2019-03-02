@@ -32,7 +32,7 @@ namespace ScryptTheCrypt
         public event Action<Game> RoundEnd = delegate { };
         public event Action<Game, GameActor> ActorActionsStart = delegate { };
         public event Action<Game, GameActor> ActorActionsEnd = delegate { };
-        public event Action<GameActor> TargetSelected = delegate { };
+        public event Action<GameActor> ActorTargetedChange = delegate { };
         public event Action<GameActor, GameActor> AttackStart = delegate { };
         public event Action<GameActor, GameActor> AttackEnd = delegate { };
         public event Action<GameActor, float, float> ActorHealthChange = delegate { };
@@ -44,7 +44,7 @@ namespace ScryptTheCrypt
         public void RoundEnd_Fire(Game g) { RoundEnd(g); }
         public void ActorActionsStart_Fire(Game g, GameActor a) { ActorActionsStart(g, a); }
         public void ActorActionsEnd_Fire(Game g, GameActor a) { ActorActionsEnd(g, a); }
-        public void TargetSelected_Fire(GameActor a) { TargetSelected(a); }
+        public void ActorTargetedChange_Fire(GameActor a) { ActorTargetedChange(a); }
         public void AttackStart_Fire(GameActor attacker, GameActor victim) { AttackStart(attacker, victim); }
         public void AttackEnd_Fire(GameActor attacker, GameActor victim) { AttackEnd(attacker, victim); }
         public void ActorHealthChange_Fire(GameActor a, float oldHealth, float newHealth) { ActorHealthChange(a, oldHealth, newHealth); }

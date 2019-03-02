@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <Version>0.0.0.3</Version>
+    <Version>0.0.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
