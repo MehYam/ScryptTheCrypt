@@ -27,6 +27,7 @@ namespace ScryptTheCrypt
             _singleton = null;
         }
         public event Action<Game, GameActor> ActorAdded = delegate { };
+        public event Action<Game, GameActor> ActorRemoved = delegate { };
         public event Action<Game> RoundStart = delegate { };
         public event Action<Game> RoundEnd = delegate { };
         public event Action<Game, GameActor> ActorActionsStart = delegate { };
@@ -38,6 +39,7 @@ namespace ScryptTheCrypt
         public event Action<GameActor> Death = delegate { };
 
         public void ActorAdded_Fire(Game g, GameActor a) { ActorAdded(g, a); }
+        public void ActorRemoved_Fire(Game g, GameActor a) { ActorRemoved(g, a); }
         public void RoundStart_Fire(Game g) { RoundStart(g); }
         public void RoundEnd_Fire(Game g) { RoundEnd(g); }
         public void ActorActionsStart_Fire(Game g, GameActor a) { ActorActionsStart(g, a); }

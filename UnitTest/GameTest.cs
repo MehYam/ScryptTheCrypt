@@ -106,8 +106,8 @@ namespace UnitTest
         {
             TestAddActorEvent(GameActor.Alignment.Mob);
         }
-        [ExpectedException(typeof(NotSupportedException))]
         [TestMethod]
+        [ExpectedException(typeof(NotSupportedException))]
         public void PlayerListShouldBeReadOnly()
         {
             testData.game.Players[0] = null;
@@ -130,6 +130,35 @@ namespace UnitTest
 
             testData.game.ClearActors(GameActor.Alignment.Player);
             Assert.AreEqual(0, testData.game.Players.Count);
+        }
+        [TestMethod]
+        public void ClearActorsShouldFireEvent()
+        {
+            int players = testData.game.Players.Count;
+            int mobs = testData.game.Mobs.Count;
+
+            Assert.IsTrue(players > 0);
+            Assert.IsTrue(mobs > 0);
+
+            GameEvents.Instance.ActorRemoved += (g, a) =>
+            {
+                if (a.align == GameActor.Alignment.Player)
+                {
+                    --players;
+                    Assert.IsFalse(testData.game.Players.Contains(a));
+                }
+                if (a.align == GameActor.Alignment.Mob)
+                {
+                    --mobs;
+                    Assert.IsFalse(testData.game.Mobs.Contains(a));
+                }
+            };
+
+            testData.game.ClearActors(GameActor.Alignment.Player);
+            Assert.AreEqual(0, players);
+
+            testData.game.ClearActors(GameActor.Alignment.Mob);
+            Assert.AreEqual(0, mobs);
         }
         [TestMethod]
         public void DeadMobsShouldReturnVictory()

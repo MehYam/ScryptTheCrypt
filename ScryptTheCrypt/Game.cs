@@ -41,16 +41,22 @@ namespace ScryptTheCrypt
 
         public IList<GameActor> Players { get { return players.AsReadOnly(); } }
         public IList<GameActor> Mobs { get { return mobs.AsReadOnly(); } }
-        public void ClearActors(GameActor.Alignment align)
-        {
-            var actors = align == GameActor.Alignment.Player ? players : mobs;
-            actors.Clear();
-        }
         public void AddActor(GameActor actor)
         {
             var actors = actor.align == GameActor.Alignment.Player ? players : mobs;
             actors.Add(actor);
             GameEvents.Instance.ActorAdded_Fire(this, actor);
+        }
+        public void ClearActors(GameActor.Alignment align)
+        {
+            var actors = align == GameActor.Alignment.Player ? players : mobs;
+            var actorsCopy = actors.ToArray();
+
+            actors.Clear();
+            foreach (var actor in actorsCopy)
+            {
+                GameEvents.Instance.ActorRemoved_Fire(this, actor);
+            }
         }
         public void PlayRound()
         {
