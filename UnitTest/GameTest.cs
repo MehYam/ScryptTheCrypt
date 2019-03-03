@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using KaiGameUtil;
 using ScryptTheCrypt;
 
 namespace UnitTest
@@ -274,6 +275,44 @@ namespace UnitTest
             Assert.AreEqual(2, targets.Count);
             Assert.IsTrue(targets.Contains(actor1));
             Assert.IsTrue(targets.Contains(actor2));
+        }
+        [TestMethod]
+        public void GetPositionsShouldReturnActorPositions()
+        {
+            GameActor actor1 = new GameActor();
+            GameActor actor2 = new GameActor();
+
+            actor1.pos = new Point<int>(0, 0);
+            actor2.pos = new Point<int>(20, 20);
+
+            var game = new Game();
+            game.AddActor(actor1);
+            game.AddActor(actor2);
+
+            var field = game.GetPositions();
+
+            Assert.AreEqual(field.size.x, Math.Abs(actor1.pos.x - actor2.pos.x) + 1);
+            Assert.AreEqual(field.size.y, Math.Abs(actor1.pos.y - actor2.pos.y) + 1);
+
+            int total = 0;
+            field.ForEach((x, y, actor) =>
+            {
+                if (actor != null)
+                {
+                    ++total;
+                }
+                else if (actor == actor1)
+                {
+                    Assert.AreEqual(x, actor1.pos.x);
+                    Assert.AreEqual(y, actor1.pos.x);
+                }
+                else if (actor == actor2)
+                {
+                    Assert.AreEqual(x, actor2.pos.x);
+                    Assert.AreEqual(y, actor2.pos.x);
+                }
+            });
+            Assert.AreEqual(2, total);
         }
         // KAI: we're mixing unit and integration tests, look into how to manage that
         [TestMethod]

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 using ScryptTheCrypt.Actions;
 
+using KaiGameUtil;
+
 namespace ScryptTheCrypt
 {
     public sealed class GameActor
@@ -16,6 +18,7 @@ namespace ScryptTheCrypt
         public readonly string name;
         public readonly string uniqueName; // for convenience
         public readonly float baseHealth;
+        public Point<int> pos;
 
         private float _health;
         public float Health

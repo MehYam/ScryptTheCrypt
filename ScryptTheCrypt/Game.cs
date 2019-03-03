@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
-using kaiGameUtil;
+using KaiGameUtil;
 
 namespace ScryptTheCrypt
 {
@@ -58,12 +59,50 @@ namespace ScryptTheCrypt
                 GameEvents.Instance.ActorRemoved_Fire(this, actor);
             }
         }
-        public List<GameActor> GetTargets()
+        public IList<GameActor> GetTargets()
         {
             var targets = new List<GameActor>();
             targets.AddRange(players.FindAll(actor => actor.Targeted));
             targets.AddRange(mobs.FindAll(actor => actor.Targeted));
             return targets;
+        }
+        public Layer<GameActor> GetPositions()
+        {
+            var min = KaiGameUtil.Util.zero;
+            var max = KaiGameUtil.Util.min;
+            void RecordBounds(IList<GameActor> actors)
+            {
+                foreach (var actor in players)
+                {
+                    if (actor.pos.x < min.x)
+                    {
+                        min.x = actor.pos.x;
+                    }
+                    if (actor.pos.y < min.y)
+                    {
+                        min.y = actor.pos.y;
+                    }
+                    if (actor.pos.x > max.x)
+                    {
+                        max.x = actor.pos.x;
+                    }
+                    if (actor.pos.x > max.y)
+                    {
+                        max.y = actor.pos.y;
+                    }
+                }
+            }
+            RecordBounds(players);
+            RecordBounds(mobs);
+            if (max != KaiGameUtil.Util.min)
+            {
+                var positions = new Layer<GameActor>(max.x - min.x + 1, max.y - min.y + 1);
+                Action<GameActor> setter = actor => { positions.Set(actor.pos.x - min.x, actor.pos.y - min.y, actor); };
+                players.ForEach(setter);
+                mobs.ForEach(setter);
+                return positions;
+            }
+            return null;
         }
         public void PlayRound()
         {

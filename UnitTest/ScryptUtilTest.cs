@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-
-using kaiGameUtil;
+using KaiGameUtil;
 using ScryptTheCrypt;
 
 namespace UnitTest

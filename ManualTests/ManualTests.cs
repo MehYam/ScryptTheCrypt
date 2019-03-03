@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
-using System.Text;
-using kaiGameUtil;
+
+using KaiGameUtil;
 using ScryptTheCrypt;
 using ScryptTheCrypt.Actions;
 namespace ManualTests
