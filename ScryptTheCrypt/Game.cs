@@ -68,8 +68,8 @@ namespace ScryptTheCrypt
         }
         public Layer<GameActor> GetPositions()
         {
-            var min = KaiGameUtil.Util.zero;
-            var max = KaiGameUtil.Util.min;
+            var min = PointUtil.max;
+            var max = PointUtil.min;
             void RecordBounds(IList<GameActor> actors)
             {
                 foreach (var actor in players)
@@ -94,10 +94,10 @@ namespace ScryptTheCrypt
             }
             RecordBounds(players);
             RecordBounds(mobs);
-            if (max != KaiGameUtil.Util.min)
+            if (max != PointUtil.min)
             {
-                var positions = new Layer<GameActor>(max.x - min.x + 1, max.y - min.y + 1);
-                Action<GameActor> setter = actor => { positions.Set(actor.pos.x - min.x, actor.pos.y - min.y, actor); };
+                var positions = new Layer<GameActor>(min, max);
+                Action<GameActor> setter = actor => { positions.Set(actor.pos, actor); };
                 players.ForEach(setter);
                 mobs.ForEach(setter);
                 return positions;

@@ -282,8 +282,8 @@ namespace UnitTest
             GameActor actor1 = new GameActor();
             GameActor actor2 = new GameActor();
 
-            actor1.pos = new Point<int>(0, 0);
-            actor2.pos = new Point<int>(20, 20);
+            actor1.pos = new Point<int>(-3, 3);
+            actor2.pos = new Point<int>(10, 10);
 
             var game = new Game();
             game.AddActor(actor1);
