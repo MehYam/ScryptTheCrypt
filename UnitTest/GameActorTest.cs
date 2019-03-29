@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using KaiGameUtil;
 using ScryptTheCrypt;
 
 namespace UnitTest
@@ -109,7 +110,7 @@ namespace UnitTest
             var a = new GameActor();
             var b = new GameActor();
 
-            a.Weapon = new GameWeapon("lunchbox", b.baseHealth - 1);
+            a.Weapon = new GameWeapon("lunchbox to the head", b.baseHealth - 1);
 
             a.Attack(b);
             Assert.AreEqual(b.Health, b.baseHealth - a.Weapon.damage);
@@ -127,6 +128,75 @@ namespace UnitTest
             a.Attack(b);
             Assert.AreEqual(b.Health, 0);
             Assert.IsFalse(b.Alive);
+        }
+        [TestMethod]
+        public void AttackShouldChangeCharacterDirection()
+        {
+            var a = new GameActor();
+            var b = new GameActor();
+            a.Weapon = new GameWeapon("wet noodle", b.baseHealth / 100);
+
+            bool AttackChangesDir(Point<int> aDir)
+            {
+                a.dir = aDir;
+                a.Attack(b);
+                return a.dir != aDir;
+            }
+            a.pos = new Point<int>(-2, 0);
+            b.pos = new Point<int>(2, 0);
+
+            Assert.IsFalse(AttackChangesDir(PointUtil.right));
+            Assert.IsTrue(AttackChangesDir(PointUtil.left));
+
+            a.pos = new Point<int>(4, 0);
+            Assert.IsTrue(AttackChangesDir(PointUtil.right));
+            Assert.IsFalse(AttackChangesDir(PointUtil.left));
+        }
+        [TestMethod]
+        public void DamageFromBehindShouldCrit()
+        {
+            var a = new GameActor();
+            var b = new GameActor();
+
+            a.Weapon = new GameWeapon("sneaky shiv", a.baseHealth / 10);
+            a.dir = PointUtil.right;
+            b.dir = PointUtil.right;
+
+            a.Attack(b);
+            Assert.AreEqual(a.Weapon.damage * 2, b.baseHealth - b.Health);
+        }
+        [TestMethod]
+        public void CritDamageShouldFireEvent()
+        {
+            var a = new GameActor();
+            var b = new GameActor();
+
+            a.Weapon = new GameWeapon("sneaky shiv", a.baseHealth / 10);
+            a.dir = PointUtil.right;
+            b.dir = PointUtil.right;
+
+            bool fired = false;
+            GameEvents.Instance.AttackWillCrit += (one, two) =>
+            {
+                fired = true;
+            };
+            a.Attack(b);
+
+            Assert.IsTrue(fired);
+        }
+        [TestMethod]
+        public void DamageNotFromBehindShouldBeNormal()
+        {
+            var a = new GameActor();
+            var b = new GameActor();
+
+            a.Weapon = new GameWeapon("test weapon", 10);
+
+            a.Attack(b);
+            Assert.AreEqual(b.Health, b.baseHealth - a.Weapon.damage);
+
+            a.dir = PointUtil.right;
+            b.dir = PointUtil.left;
         }
         [TestMethod]
         public void AttackShouldFireEvents()
@@ -282,6 +352,40 @@ namespace UnitTest
             };
             actor.TakeDamage(actor.Health / 2);
             Assert.IsTrue(fired);
+        }
+        [TestMethod]
+        public void DirectionChangeShouldFireEvent()
+        {
+            var actor = new GameActor();
+            var oldDir = actor.dir;
+            Point<int> newDir = new Point<int>();
+
+            GameEvents.Instance.ActorDirectionChange += (a, old) =>
+            {
+                Assert.AreEqual(actor, a);
+                Assert.AreEqual(old, oldDir);
+
+                newDir = a.dir;
+            };
+            actor.dir = PointUtil.up;
+
+            Assert.AreNotEqual(newDir, oldDir);
+        }
+        [TestMethod]
+        public void NonDirectionChangeShouldNotFireEvent()
+        {
+            var actor = new GameActor();
+            actor.dir = PointUtil.down;
+
+            bool fired = false;
+
+            GameEvents.Instance.ActorDirectionChange += (a, old) =>
+            {
+                fired = true;
+            };
+            actor.dir = PointUtil.down;
+
+            Assert.IsFalse(fired);
         }
         [TestMethod]
         public void HealShouldFireHealthChangeEvent()

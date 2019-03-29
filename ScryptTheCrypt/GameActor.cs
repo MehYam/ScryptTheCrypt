@@ -18,7 +18,6 @@ namespace ScryptTheCrypt
         public readonly string name;
         public readonly string uniqueName; // for convenience
         public readonly float baseHealth;
-        public Point<int> pos;
 
         private float _health;
         public float Health
@@ -46,6 +45,23 @@ namespace ScryptTheCrypt
         }
         public GameWeapon Weapon { get; set; }
         public bool Alive { get { return Health > 0; } }
+
+        public Point<int> pos;
+
+        private Point<int> _dir;
+        public Point<int> dir
+        {
+            get {  return _dir; }
+            set
+            {
+                if (value != _dir)
+                {
+                    var oldDir = _dir;
+                    _dir = value;
+                    GameEvents.Instance.ActorDirectionChange_Fire(this, oldDir);
+                }
+            }
+        }
 
         private bool _targeted;
         public bool Targeted
@@ -96,13 +112,45 @@ namespace ScryptTheCrypt
         {
             Health = Math.Min(baseHealth, Health + h);
         }
+        static bool IsFacing(GameActor a, GameActor b)
+        {
+            // actor with no direction faces everyone.  Making this choice because a) directionality is 
+            // something we added later, and this keeps things backwards-compatible (and makes old tests pass),
+            // and b) you can rationalize it to make sense in a game world, somehow
+            if (a.dir == PointUtil.zero)
+            {
+                return true;
+            }
+
+            var deltaPos = b.pos.x - a.pos.x;
+            if (deltaPos > 0)
+            {
+                return a.dir == PointUtil.right;
+            }
+            return a.dir == PointUtil.left;
+        }
+        static Point<int> Flip(Point<int> dir)
+        {
+            return new Point<int>(-dir.x, 0);
+        }
         public void Attack(GameActor other)
         {
             if (other == null) throw new ArgumentNullException(nameof(other), "other actor is null");
             if (Weapon != null)
             {
+                if (!IsFacing(this, other))
+                {
+                    dir = Flip(dir);
+                }
                 GameEvents.Instance.AttackStart_Fire(this, other);
-                other.TakeDamage(Weapon.damage);
+
+                float critMultiplier = 1;
+                if (!IsFacing(other, this))
+                {
+                    critMultiplier = Weapon.critMultiplier;
+                    GameEvents.Instance.AttackWillCrit_Fire(this, other);
+                }
+                other.TakeDamage(Weapon.damage * critMultiplier);
                 GameEvents.Instance.AttackEnd_Fire(this, other);
             }
         }
