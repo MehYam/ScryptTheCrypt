@@ -358,7 +358,7 @@ namespace UnitTest
         {
             var actor = new GameActor();
             var oldDir = actor.dir;
-            Point<int> newDir = new Point<int>();
+            Point<int> newDir = PointUtil.zero;
 
             GameEvents.Instance.ActorDirectionChange += (a, old) =>
             {
@@ -372,7 +372,7 @@ namespace UnitTest
             Assert.AreNotEqual(newDir, oldDir);
         }
         [TestMethod]
-        public void NonDirectionChangeShouldNotFireEvent()
+        public void DirectionNonChangeShouldNotFireEvent()
         {
             var actor = new GameActor();
             actor.dir = PointUtil.down;
@@ -385,6 +385,37 @@ namespace UnitTest
             };
             actor.dir = PointUtil.down;
 
+            Assert.IsFalse(fired);
+        }
+        [TestMethod]
+        public void PositionChangeShouldFireEvent()
+        {
+            var actor = new GameActor();
+            var oldPos = actor.pos;
+            Point<int> newPos = PointUtil.zero;
+
+            GameEvents.Instance.ActorPositionChange += (a, old) =>
+            {
+                Assert.AreEqual(actor, a);
+                Assert.AreEqual(old, oldPos);
+                newPos = a.pos;
+            };
+
+            actor.pos = PointUtil.up;
+            Assert.AreNotEqual(newPos, oldPos);
+        }
+        [TestMethod]
+        public void PositionNonChangeShouldNotFireEvent()
+        {
+            var actor = new GameActor();
+            actor.pos = PointUtil.zero;
+
+            bool fired = false;
+            GameEvents.Instance.ActorDirectionChange += (a, old) =>
+            {
+                fired = true;
+            };
+            actor.dir = PointUtil.zero;
             Assert.IsFalse(fired);
         }
         [TestMethod]

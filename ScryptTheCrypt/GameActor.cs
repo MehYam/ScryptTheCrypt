@@ -46,7 +46,20 @@ namespace ScryptTheCrypt
         public GameWeapon Weapon { get; set; }
         public bool Alive { get { return Health > 0; } }
 
-        public Point<int> pos;
+        private Point<int> _pos;
+        public Point<int> pos
+        {
+            get {  return _pos; }
+            set
+            {
+                if (value != _pos)
+                {
+                    var old = _pos;
+                    _pos = value;
+                    GameEvents.Instance.ActorPositionChange_Fire(this, old);
+                }
+            }
+        }
 
         private Point<int> _dir;
         public Point<int> dir
@@ -56,9 +69,9 @@ namespace ScryptTheCrypt
             {
                 if (value != _dir)
                 {
-                    var oldDir = _dir;
+                    var old = _dir;
                     _dir = value;
-                    GameEvents.Instance.ActorDirectionChange_Fire(this, oldDir);
+                    GameEvents.Instance.ActorDirectionChange_Fire(this, old);
                 }
             }
         }
